@@ -1,0 +1,17 @@
+/* body {
+	width: 85%;
+	margin: 0 auto;
+} */
+
+.loginButton {
+	background-color: #ff0b79 !important;
+	border-color: #ff0b79 !important;
+}
+
+.form-control:focus {
+	box-shadow: 0 0 0 0.1rem rgb(0 123 255 / 25%) !important;
+}
+
+.smallText {
+	font-size: 14px;
+}
