@@ -1,21 +1,34 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Button } from "react-bootstrap";
-import { ReactComponent as CodiLogo } from "../CodiLogo.svg";
-import { Link } from "react-router-dom";
+import { default as CodiLogo } from "../CodiLogo.svg";
+import { Link, withRouter } from "react-router-dom";
+import LoginModal from "./LoginModal";
+import UserContext from "./UserContext";
+import axios from "axios";
+import cookie from "js-cookie";
 
 const Header = () => {
+	const { token, setToken } = useContext(UserContext);
+	const [showLogin, setShowLogin] = useState(false);
+	const [alumniId, setAlumniId] = useState({});
+	if (token) {
+		axios.get("profile").then((res) => {
+			setAlumniId(res.data.id);
+		});
+	}
 	return (
 		<div>
 			<header
 				className="flex-row d-flex align-items-center absolute  justify-content-between "
 				style={{
+					margin: "0.5rem 0",
 					width: "100%",
-					height: "5rem",
+					height: "7rem",
 					backgroundColor: "#fff",
 					padding: "0 10% 0 10%",
 				}}
 			>
-				<CodiLogo style={{ width: "7rem" }} />
+				<img src={CodiLogo} style={{ width: "9rem" }} />
 				<div>
 					<Link
 						to="/"
@@ -31,13 +44,51 @@ const Header = () => {
 					>
 						About
 					</a>
-					<Button className=" loginButton" style={{ borderRadius: "3px" }}>
-						Login
-					</Button>
+
+					{token ? (
+						<Link
+							to={`/profile/${alumniId}`}
+							className="mr-4"
+							style={{ cursor: "pointer", color: "red" }}
+						>
+							Profile
+						</Link>
+					) : null}
+					{token ? (
+						<Button
+							onClick={async () => {
+								await axios.post("logout").then((res) => {
+									console.log(res);
+									cookie.remove("token");
+									setToken(null);
+								});
+							}}
+							className=" loginButton"
+							style={{ borderRadius: "3px" }}
+						>
+							logout
+						</Button>
+					) : (
+						<Button
+							onClick={() => {
+								setShowLogin(true);
+							}}
+							className=" loginButton"
+							style={{ borderRadius: "3px" }}
+						>
+							Login
+						</Button>
+					)}
+					<LoginModal
+						show={showLogin}
+						onHide={() => {
+							setShowLogin(false);
+						}}
+					/>
 				</div>
 			</header>
 		</div>
 	);
 };
 
-export default Header;
+export default withRouter(Header);

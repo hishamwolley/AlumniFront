@@ -1,120 +1,274 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Card, Tabs, Tab } from "react-bootstrap";
-import { FaGithub, FaFacebook } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import StarRatings from "react-star-ratings";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import UserContext from "../components/UserContext";
+import cookie from "js-cookie";
 
 const Profile = () => {
+	const { id } = useParams();
+	const [alumni, setAlumni] = useState({});
+	const [isLogged, setIsLogged] = useState(false);
+	const getUserInfo = async () => {
+		await axios.get(`/alumni/${id}`).then((res) => {
+			setAlumni(res.data.data);
+			if (res.data.isLogged) {
+				setIsLogged(true);
+			}
+		});
+	};
+	useEffect(() => {
+		axios.defaults.headers.common["Authorization"] =
+			"bearer " + cookie.get("token");
+		getUserInfo();
+	}, [id]);
 	return (
 		<main
-			className="d-flex flex-col "
+			id="profile"
+			className="d-flex flex-row mx-auto mt-4"
 			style={{
-				margin: "3rem 12.5% 0 12.5%",
-				background: "#f5f5f5	",
-				padding: "1.5rem",
+				paddingLeft: "1.5rem",
+				borderRadius: "10px",
+				width: "75%",
+				margin: "0 auto",
 			}}
 		>
-			<section style={{ width: "25%" }} className="mr-5">
-				<Card style={{ width: "100%" }}>
-					<Card.Img
-						variant="top"
-						src="https://www.publicdomainpictures.net/pictures/270000/velka/avatar-people-person-business-.jpg"
-					/>
-				</Card>
-				<article className="text-center mt-4 smallText">
-					<div className="d-flex flex-row align-items-center">
-						<span
-							style={{ display: "inline" }}
-							className="mr-2 font-weight-bold text-secondary"
-						>
-							Description
-						</span>
+			<Card
+				style={{ width: "40%" }}
+				className=" mt-3 shadow mr-5 p-2"
+				id="profile-left"
+			>
+				<Card.Body>
+					<section className="text-center">
 						<div
-							style={{
-								width: "100%",
-								borderBottom: "1px solid rgba(0,0,0,0.3)",
-								display: "inline-block",
-							}}
-						></div>
-					</div>
-					<p className="mt-4">
-						lorem "Sed ut perspiciatis unde omnis iste natus error sit
-						voluptatem accusantium doloremque laudantium, totam rem aperiam,
-						eaque ipsa quae ab illo inventore veritatis et quasi architecto
-					</p>
-				</article>
-				<article className="text-center mt-4 smallText">
-					<div className="d-flex flex-row align-items-center">
-						<span
-							style={{ display: "inline" }}
-							className="mr-2 font-weight-bold text-secondary"
+							className="mx-auto mt-3"
+							style={{ width: "15rem", height: "15rem" }}
 						>
-							Skills
-						</span>
-						<div
-							style={{
-								width: "100%",
-								borderBottom: "1px solid rgba(0,0,0,0.3)",
-								display: "inline-block",
-							}}
-						></div>
-					</div>
-				</article>
-			</section>
-			<section className="ml-5">
-				<div className="d-flex flex-row align-items-center">
-					<h4 className="d-inline-block mr-2">Firstname Lastname</h4>
-					{/* <span className="font-weight-light small">
-							Beirut <MdLocationOn />
-						</span> */}
-				</div>
-				<span className="small text-primary">Web Developer</span>
-				<div className="w-25 d-flex flex-row justify-content-around mt-4">
-					<FaGithub size="2rem" />
-					<FaFacebook size="2rem" />
-				</div>
-				<Tabs
-					defaultActiveKey="About"
-					id="uncontrolled-tab-example"
-					style={{ marginTop: "5rem", minWidth: "375px" }}
-				>
-					<Tab eventKey="About" title="About">
-						<p className="mt-4 small text-secondary">Contact Information</p>
-						<div className="flex-row d-flex justify-content-between small">
-							<p>Email</p>
-							<span className="text-primary">JohnDoe@gmail.com</span>
+							<img
+								className="rounded-circle shadow-lg "
+								style={{ width: "100%", minHeight: "100%" }}
+								src="https://i.guim.co.uk/img/media/2989811a5ef7eab9d1e06286fea02a2ab52e670d/0_97_4927_2957/master/4927.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=618f5d45b2225b0cc174f5568bcbd1f9"
+								// src={`http://localhost:8000/storage/images/${alumni.image}`}
+							/>
 						</div>
-						<div className="flex-row d-flex justify-content-between small">
-							<p>Location</p>
-							<span>Beirut</span>
-						</div>
-						<div className="flex-row d-flex justify-content-between small">
-							<p>Phone</p>
-							<span className="text-primary">12345678</span>
-						</div>
-						<p className="mt-4 small text-secondary">Basic Information</p>
+						<h4 className="mt-4">
+							{alumni.firstname} {alumni.lastname}
+						</h4>
 
-						<div className="flex-row d-flex justify-content-between small">
-							<p>Birthday</p>
-							<span>10/10/2020</span>
-						</div>
+						<article className="text-left mt-5 smallText">
+							<div className="d-flex flex-row align-items-center ">
+								<span
+									style={{ display: "inline" }}
+									className="mr-2 font-weight-bold text-secondary"
+								>
+									Description
+								</span>
+								<div
+									style={{
+										width: "100%",
+										borderBottom: "1px solid rgba(0,0,0,0.3)",
+										display: "inline-block",
+									}}
+								></div>
+							</div>
+							<p className="mt-4 pl-3 text-center">
+								{/* lorem "Sed ut perspiciatis unde omnis iste natus error sit
+								voluptatem accusantium doloremque laudantium, totam rem aperiam,
+								eaque ipsa quae ab illo inventore veritatis et quasi architecto */}
+								{alumni.description}
+							</p>
+						</article>
+						<article className="text-center mt-4 smallText ">
+							<div className="d-flex flex-row align-items-center">
+								<span
+									style={{ display: "inline" }}
+									className="mr-2 font-weight-bold text-secondary"
+								>
+									Skills
+								</span>
+								<div
+									style={{
+										width: "100%",
+										borderBottom: "1px solid rgba(0,0,0,0.3)",
+										display: "inline-block",
+									}}
+								></div>
+							</div>
+							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
+								<div className="pt-1">
+									<span>Javascript</span>
+								</div>
+								<StarRatings
+									rating={4}
+									starRatedColor="#fada5e"
+									// changeRating={this.changeRating}
+									numberOfStars={5}
+									starDimension={"1rem"}
+									starSpacing="2px"
+									name="rating"
+								/>
+							</div>
+							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
+								<div className="pt-1">
+									<span>Javascript</span>
+								</div>
+								<StarRatings
+									rating={4}
+									starRatedColor="#fada5e"
+									// changeRating={this.changeRating}
+									numberOfStars={5}
+									starDimension={"1rem"}
+									starSpacing="2px"
+									name="rating"
+								/>
+							</div>
+							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
+								<div className="pt-1">
+									<span>Javascript</span>
+								</div>
+								<StarRatings
+									rating={4}
+									starRatedColor="#fada5e"
+									// changeRating={this.changeRating}
+									numberOfStars={5}
+									starDimension={"1rem"}
+									starSpacing="2px"
+									name="rating"
+								/>
+							</div>
+							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
+								<div className="pt-1">
+									<span>Javascript</span>
+								</div>
+								<StarRatings
+									rating={4}
+									starRatedColor="#fada5e"
+									// changeRating={this.changeRating}
+									numberOfStars={5}
+									starDimension={"1rem"}
+									starSpacing="2px"
+									name="rating"
+								/>
+							</div>
 
-						<div className="flex-row d-flex justify-content-between small">
-							<p>Cohort</p>
-							<span>B06</span>
-						</div>
-						<div className="flex-row d-flex justify-content-between small">
-							<p>Flexibility</p>
-							<span>Flexibile</span>
-						</div>
-						<div className="flex-row d-flex justify-content-between small">
-							<p>Availability</p>
-							<span>Busy</span>
-						</div>
-					</Tab>
-					<Tab eventKey="Education" title="Education">
-						<p className="mt-4">2</p>
-					</Tab>
-				</Tabs>
-			</section>
+							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
+								<div className="pt-1">
+									<span>Javascript</span>
+								</div>
+								<StarRatings
+									rating={4}
+									starRatedColor="#fada5e"
+									// changeRating={this.changeRating}
+									numberOfStars={5}
+									starDimension={"1rem"}
+									starSpacing="2px"
+									name="rating"
+								/>
+							</div>
+							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
+								<div className="pt-1">
+									<span>Javascript</span>
+								</div>
+								<StarRatings
+									rating={4}
+									starRatedColor="#fada5e"
+									// changeRating={this.changeRating}
+									numberOfStars={5}
+									starDimension={"1rem"}
+									starSpacing="2px"
+									name="rating"
+								/>
+							</div>
+						</article>
+					</section>
+				</Card.Body>
+			</Card>
+
+			<Card
+				className=" mt-3 shadow"
+				style={{ width: "65%" }}
+				id="profile-right"
+			>
+				{isLogged ? (
+					<Card.Header className="text-center flex-row d-flex justify-content-end">
+						<Link to="www.google.com">Edit</Link>
+					</Card.Header>
+				) : null}
+
+				<Card.Body>
+					<section className="px-5 ">
+						<section className="w-25 mx-auto">
+							<div className=" d-flex flex-row mt-5 justify-content-center">
+								<FaGithub size="2rem" />
+								<FaLinkedin size="2rem" color="#0e76a8" className="ml-3" />
+							</div>
+							<div className="flex-row d-flex justify-content-center align-items-center mt-4 ">
+								<div
+									style={{
+										width: "1rem",
+										height: "1rem",
+										background: "green",
+										borderRadius: "50%",
+									}}
+								></div>
+								<span className="ml-3">Available</span>
+							</div>
+						</section>
+						<hr className="mt-5" />
+						<Tabs
+							defaultActiveKey="About"
+							id="uncontrolled-tab-example"
+							style={{ marginTop: "3rem", textAlign: "left" }}
+						>
+							<Tab eventKey="About" title="About">
+								<p className="mt-5  text-secondary small">
+									Contact Information
+								</p>
+								<div className="flex-row d-flex justify-content-between mt-4 ">
+									<p>Email</p>
+									<span className="text-primary" style={{ width: "40%" }}>
+										{alumni.email}
+									</span>
+								</div>
+								<div className="flex-row d-flex justify-content-between ">
+									<p>Location</p>
+									<span style={{ width: "40%" }} className="text-primary">
+										{alumni.city}
+									</span>
+								</div>
+								<div className="flex-row d-flex justify-content-between ">
+									<p>Phone</p>
+									<span style={{ width: "40%" }} className="text-primary">
+										{alumni.phone}
+									</span>
+								</div>
+								<p className="mt-2  text-secondary small">Basic Information</p>
+
+								<div className="flex-row d-flex justify-content-between mt-4 ">
+									<p>Birthday</p>
+									<span style={{ width: "40%" }}>{alumni.birthdate}</span>
+								</div>
+
+								<div className="flex-row d-flex justify-content-between ">
+									<p>Cohort</p>
+									<span style={{ width: "40%" }}>B0{alumni.cohort}</span>
+								</div>
+								<div className="flex-row d-flex justify-content-between  ">
+									<p>Flexibility</p>
+									<span style={{ width: "40%" }}>
+										{alumni.flexibility ? "Yes" : "No"}
+									</span>
+								</div>
+							</Tab>
+							<Tab eventKey="Education" title="Education">
+								<p className="mt-4">2</p>
+							</Tab>
+						</Tabs>
+					</section>
+				</Card.Body>
+			</Card>
 		</main>
 	);
 };
