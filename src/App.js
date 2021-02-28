@@ -4,12 +4,15 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Profile from "./Pages/Profile";
 import Home from "./Pages/Home";
+import EditProfile from "./Pages/EditProfile";
+import FourOFour from "./Pages/FourOFour";
 import ScrollToTop from "./components/ScrollToTop";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
 import UserContext from "./components/UserContext";
 import jwt_decode from "jwt-decode";
 import cookie from "js-cookie";
+import Protected from "./components/Protected";
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -44,10 +47,16 @@ function App() {
 						<Route exact path="/">
 							<Home />
 						</Route>
-
 						<Route exact path="/profile/:id">
 							<Profile />
 						</Route>
+						<Protected
+							isAuth={token}
+							exact
+							path="/edit/:id"
+							component={(props) => <EditProfile />}
+						/>
+						<Route component={FourOFour} />
 					</Switch>
 				</ScrollToTop>
 				<Footer />

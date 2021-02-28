@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+
+body {
+	font-family: "Open Sans", Georgia, "Times New Roman", Times, serif;
+}
+
 .loginButton {
 	background-color: #ff0b79 !important;
 	border-color: #ff0b79 !important;
@@ -27,6 +33,39 @@
 	left: 50%;
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
+}
+
+.editActive {
+	background: rgba(0, 0, 0, 0.035);
+	border-radius: 10px;
+	padding-left: 1rem;
+	display: flex;
+	align-items: center;
+}
+
+.editActive::before {
+	height: 40px;
+	position: absolute;
+	display: inline-block;
+	content: "";
+	background: #ff0b79;
+	width: 10px;
+	left: 20px;
+}
+
+.editCursor {
+	cursor: pointer;
+}
+
+.PhoneInputInput {
+	height: calc(1.5em + 0.75rem + 2px);
+	border: 1px solid #ced4da;
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+}
+
+textarea {
+	resize: none !important;
 }
 
 @media screen and (max-width: 850px) {

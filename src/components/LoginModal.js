@@ -105,30 +105,6 @@ function LoginModal(props) {
 						</Form>
 					)}
 				</Formik>
-				{/* <div>
-					<button
-						onClick={async () => {
-							await axios
-								.get("login/google", {
-									Accept: "application/json",
-								})
-								.then((res) => {
-									console.log(res);
-									if (res.data.url) {
-										window.location.href = res.data.url;
-									}
-								});
-						}}
-						style={{
-							background: "#ff0b79",
-							borderColor: "#ff0b79",
-						}}
-						type="submit"
-						className="btn btn-primary mt-4"
-					>
-						google
-					</button>
-				</div> */}
 			</Modal.Body>
 		</Modal>
 	);

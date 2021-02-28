@@ -8,6 +8,7 @@ import UserContext from "../components/UserContext";
 import cookie from "js-cookie";
 
 const Profile = () => {
+	const { token, setToken } = useContext(UserContext);
 	const { id } = useParams();
 	const [alumni, setAlumni] = useState({});
 	const [isLogged, setIsLogged] = useState(false);
@@ -22,8 +23,11 @@ const Profile = () => {
 	useEffect(() => {
 		axios.defaults.headers.common["Authorization"] =
 			"bearer " + cookie.get("token");
+		if (!cookie.get("token")) {
+			setIsLogged(false);
+		}
 		getUserInfo();
-	}, [id]);
+	}, [id, token]);
 	return (
 		<main
 			id="profile"
@@ -37,7 +41,7 @@ const Profile = () => {
 		>
 			<Card
 				style={{ width: "40%" }}
-				className=" mt-3 shadow mr-5 p-2"
+				className=" mt-3 shadow mr-5 p-2 bored-0"
 				id="profile-left"
 			>
 				<Card.Body>
@@ -187,20 +191,20 @@ const Profile = () => {
 			</Card>
 
 			<Card
-				className=" mt-3 shadow"
+				className=" mt-3 shadow border-0"
 				style={{ width: "65%" }}
 				id="profile-right"
 			>
 				{isLogged ? (
 					<Card.Header className="text-center flex-row d-flex justify-content-end">
-						<Link to="www.google.com">Edit</Link>
+						<Link to={`/edit/${alumni.id}`}>Edit</Link>
 					</Card.Header>
 				) : null}
 
 				<Card.Body>
 					<section className="px-5 ">
 						<section className="w-25 mx-auto">
-							<div className=" d-flex flex-row mt-5 justify-content-center">
+							<div className=" d-flex flex-row justify-content-center mt-3">
 								<FaGithub size="2rem" />
 								<FaLinkedin size="2rem" color="#0e76a8" className="ml-3" />
 							</div>
@@ -216,47 +220,82 @@ const Profile = () => {
 								<span className="ml-3">Available</span>
 							</div>
 						</section>
-						<hr className="mt-5" />
+						{/* <hr className="mt-5" /> */}
 						<Tabs
 							defaultActiveKey="About"
 							id="uncontrolled-tab-example"
 							style={{ marginTop: "3rem", textAlign: "left" }}
 						>
 							<Tab eventKey="About" title="About">
-								<p className="mt-5  text-secondary small">
-									Contact Information
-								</p>
+								<div className="d-flex flex-row align-items-center text-center mt-4">
+									<div
+										style={{
+											width: "40%",
+											borderBottom: "1px solid rgba(0,0,0,0.3)",
+											display: "inline-block",
+										}}
+									></div>
+									<span className=" text-secondary small">
+										Contact Information
+									</span>
+									<div
+										style={{
+											width: "40%",
+											borderBottom: "1px solid rgba(0,0,0,0.3)",
+											display: "inline-block",
+										}}
+									></div>
+								</div>
+
 								<div className="flex-row d-flex justify-content-between mt-4 ">
-									<p>Email</p>
+									<p className="font-weight-bold">Email</p>
 									<span className="text-primary" style={{ width: "40%" }}>
 										{alumni.email}
 									</span>
 								</div>
 								<div className="flex-row d-flex justify-content-between ">
-									<p>Location</p>
+									<p className="font-weight-bold">Location</p>
 									<span style={{ width: "40%" }} className="text-primary">
 										{alumni.city}
 									</span>
 								</div>
 								<div className="flex-row d-flex justify-content-between ">
-									<p>Phone</p>
+									<p className="font-weight-bold">Phone</p>
 									<span style={{ width: "40%" }} className="text-primary">
 										{alumni.phone}
 									</span>
 								</div>
-								<p className="mt-2  text-secondary small">Basic Information</p>
+								<div className="d-flex flex-row align-items-center text-center mt-2">
+									<div
+										style={{
+											width: "40%",
+											borderBottom: "1px solid rgba(0,0,0,0.3)",
+											display: "inline-block",
+										}}
+									></div>
+									<span className="text-secondary small">
+										General Information
+									</span>
+									<div
+										style={{
+											width: "40%",
+											borderBottom: "1px solid rgba(0,0,0,0.3)",
+											display: "inline-block",
+										}}
+									></div>
+								</div>
 
-								<div className="flex-row d-flex justify-content-between mt-4 ">
-									<p>Birthday</p>
+								<div className="flex-row d-flex justify-content-between mt-4 align-items-center ">
+									<p className="m-0">Birthday</p>
 									<span style={{ width: "40%" }}>{alumni.birthdate}</span>
 								</div>
 
-								<div className="flex-row d-flex justify-content-between ">
-									<p>Cohort</p>
+								<div className="flex-row d-flex justify-content-between mt-4  align-items-center">
+									<p className="m-0">Cohort</p>
 									<span style={{ width: "40%" }}>B0{alumni.cohort}</span>
 								</div>
-								<div className="flex-row d-flex justify-content-between  ">
-									<p>Flexibility</p>
+								<div className="flex-row d-flex justify-content-between mt-4  align-items-center">
+									<p className="m-0">Flexibility</p>
 									<span style={{ width: "40%" }}>
 										{alumni.flexibility ? "Yes" : "No"}
 									</span>

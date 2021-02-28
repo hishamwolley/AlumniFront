@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Pagination from "react-js-pagination";
+import Video from "../video/Video Introduction to life at Codi (full version).mp4";
 
 function Home() {
 	const getAlumniStudents = async () => {
@@ -31,12 +32,32 @@ function Home() {
 						className="text-center relative"
 						style={{
 							height: "75vh",
-							backgroundImage: `url("https://cdn3.f-cdn.com/files/download/97941784/programmin.jpg")`,
-							backgroundPosition: "center",
-							backgroundSize: "cover",
-							boxShadow: `inset 0 0 0 2000px rgba(25, 46, 66, 0.3)`,
+							position: "relative",
+							// backgroundImage: `url("https://cdn3.f-cdn.com/files/download/97941784/programmin.jpg")`,
+							// backgroundPosition: "center",
+							// backgroundSize: "cover",
+							// boxShadow: `inset 0 0 0 2000px rgba(25, 46, 66, 0.3)`,
 						}}
 					>
+						<video
+							className="shadow-lg"
+							autoPlay
+							muted
+							loop
+							style={{
+								position: "absolute",
+								width: "100%",
+								left: "50%",
+								top: "50%",
+								height: "100%",
+								objectFit: "cover",
+								transform: "translate(-50%,-50%)",
+								zIndex: "0",
+							}}
+						>
+							<source type="video/mp4" src={Video}></source>
+						</video>
+
 						<div
 							className="vertical-center "
 							style={{ maxWidth: "450px", minWidth: "300px" }}
