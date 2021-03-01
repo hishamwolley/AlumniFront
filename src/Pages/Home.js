@@ -48,8 +48,8 @@ function Home() {
 								position: "absolute",
 								width: "100%",
 								left: "50%",
-								top: "50%",
-								height: "90%",
+								top: "45%",
+								height: "93%",
 								objectFit: "cover",
 								transform: "translate(-50%,-50%)",
 								zIndex: "0",
@@ -68,20 +68,10 @@ function Home() {
 								opacity: "0.5",
 							}}
 						>
-							<h1
-								style={{
-									color: "#ff0b79 ",
-								}}
-							>
-								Looking for Web Developers?
-							</h1>
+							<h1 className="text-danger">Looking for Web Developers?</h1>
 							<Card.Text
-								className=" mx-auto font-weight-bold mt-4"
-								style={{
-									maxWidth: "450px",
-									minWidth: "300px",
-									color: "#ff0b79 ",
-								}}
+								className="text-danger mx-auto font-weight-bold mt-4"
+								style={{ maxWidth: "450px", minWidth: "300px" }}
 							>
 								Get to know our Codi Graduates Below!
 							</Card.Text>
@@ -91,8 +81,7 @@ function Home() {
 			</main>
 			<div className="w-75 mx-auto" style={{ marginTop: "4rem" }}>
 				<div className="d-flex flex-row justify-content-between">
-					<h2 style={{ color: "#192E42" }}>Our Students</h2>
-
+					<h2>Our Students</h2>
 					<div>
 						<div className="d-flex flex-row justify-content-between">
 							<Form>
