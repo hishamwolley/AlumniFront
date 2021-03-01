@@ -49,7 +49,7 @@ function Home() {
 								width: "100%",
 								left: "50%",
 								top: "50%",
-								height: "100%",
+								height: "90%",
 								objectFit: "cover",
 								transform: "translate(-50%,-50%)",
 								zIndex: "0",
@@ -60,14 +60,28 @@ function Home() {
 
 						<div
 							className="vertical-center "
-							style={{ maxWidth: "450px", minWidth: "300px" }}
+							style={{
+								maxWidth: "450px",
+								minWidth: "300px",
+								background: "#ffffff",
+								padding: "15px",
+								opacity: "0.5",
+							}}
 						>
-							<h1 className="text-white">
-								Looking for Web Developers to fill the gap?
+							<h1
+								style={{
+									color: "#ff0b79 ",
+								}}
+							>
+								Looking for Web Developers?
 							</h1>
 							<Card.Text
-								className="text-danger mx-auto font-weight-bold mt-4"
-								style={{ maxWidth: "450px", minWidth: "300px" }}
+								className=" mx-auto font-weight-bold mt-4"
+								style={{
+									maxWidth: "450px",
+									minWidth: "300px",
+									color: "#ff0b79 ",
+								}}
 							>
 								Get to know our Codi Graduates Below!
 							</Card.Text>
@@ -77,7 +91,8 @@ function Home() {
 			</main>
 			<div className="w-75 mx-auto" style={{ marginTop: "4rem" }}>
 				<div className="d-flex flex-row justify-content-between">
-					<h2>Our Students</h2>
+					<h2 style={{ color: "#192E42" }}>Our Students</h2>
+
 					<div>
 						<div className="d-flex flex-row justify-content-between">
 							<Form>
@@ -104,9 +119,12 @@ function Home() {
 							</Form>
 							<Dropdown>
 								<Dropdown.Toggle
-									variant="success"
+									variant="danger"
 									id="dropdown-basic"
-									style={{ height: "2.25rem", borderRadius: "0px" }}
+									style={{
+										height: "2.25rem",
+										borderRadius: "0px",
+									}}
 								>
 									All
 								</Dropdown.Toggle>

@@ -33,14 +33,14 @@ const Header = () => {
 					<Link
 						to="/"
 						className="mr-4"
-						style={{ cursor: "pointer", color: "red" }}
+						style={{ cursor: "pointer", color: "#ff0b79 " }}
 					>
 						Home
 					</Link>
 					<a
 						href="https://codi.tech/about/"
 						className="mr-4"
-						style={{ cursor: "pointer", color: "red" }}
+						style={{ cursor: "pointer", color: "#ff0b79 " }}
 					>
 						About
 					</a>
