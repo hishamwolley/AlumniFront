@@ -3,7 +3,10 @@
 body {
 	font-family: "Open Sans", Georgia, "Times New Roman", Times, serif;
 }
-
+body,
+#root {
+	height: 100%;
+}
 .loginButton {
 	background-color: #ff0b79 !important;
 	border-color: #ff0b79 !important;
@@ -68,7 +71,11 @@ textarea {
 	resize: none !important;
 }
 
-@media screen and (max-width: 850px) {
+.onSave:hover {
+	background-color: #4ded30 !important;
+}
+
+@media screen and (max-width: 900px) {
 	#profile {
 		flex-direction: column !important;
 	}
@@ -90,12 +97,12 @@ textarea {
 	}
 }
 
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 1200px) {
 	#profile-left {
-		min-width: 50% !important;
+		min-width: 45% !important;
 	}
 
 	#profile-right {
-		min-width: 50% !important;
+		min-width: 55% !important;
 	}
 }

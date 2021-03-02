@@ -15,7 +15,7 @@ import cookie from "js-cookie";
 import Protected from "./components/Protected";
 
 function App() {
-	const [token, setToken] = useState(null);
+	const [token, setToken] = useState(cookie.get("token"));
 	const providerValue = useMemo(() => ({ token, setToken }), [token, setToken]);
 	axios.defaults.baseURL = "http://localhost:8000/api/";
 	axios.defaults.headers.common["Authorization"] = "bearer " + token;

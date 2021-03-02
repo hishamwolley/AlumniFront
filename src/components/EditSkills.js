@@ -2,24 +2,62 @@ import React, { useState } from "react";
 import { Card, Button, Row } from "react-bootstrap";
 import { AiFillDelete } from "react-icons/ai";
 
-const EditSkills = () => {
-	const [skills, setSkills] = useState([]);
+const EditSkills = ({ alumni }) => {
+	console.log(alumni.skills);
+	const [skills, setSkills] = useState(alumni.skills);
 	const [skillName, setSkillName] = useState();
 	return (
 		<div>
-			<Card>
+			<div className="d-flex flex-row align-items-center mt-4 ">
+				<div
+					style={{
+						width: "45%",
+						borderBottom: "1px solid rgba(0,0,0,0.3)",
+						display: "inline-block",
+					}}
+				></div>
+				<span className="mx-2 small text-secondary text-center">Skills</span>
+
+				<div
+					style={{
+						width: "45%",
+						borderBottom: "1px solid rgba(0,0,0,0.3)",
+						display: "inline-block",
+					}}
+				></div>
+			</div>
+			<Card className="mt-5">
 				<Card.Header>
 					<div className="d-flex flex-row justify-content-between align-items-center">
 						<div>
-							<p>Add Sections</p>
+							<p>Add Skills</p>
 							<span className="position-relative fixed-bottom font-italic text-secondary small">
-								Note: You can add up to 6 sections to begin with.
+								You can add up to 12 Skills!
 							</span>
 						</div>
-						<div className="form-group d-flex flex-row ">
+
+						<form
+							className="form-group d-flex flex-row "
+							onSubmit={(e) => {
+								console.log("clicked");
+								// if (skills.length === 0) {
+								// 	// setError(true);
+								// 	return;
+								// } else {
+								// 	// setError(false);
+								// }
+								// if (skills.length >= 6) {
+								// 	alert("Maximum amount of sections added");
+								// 	return;
+								// }
+								setSkills([...skills, skillName]);
+								setSkillName("");
+								e.preventDefault();
+							}}
+						>
 							<input
-								placeholder="Add New Section"
-								maxLength="5"
+								placeholder="Skill Name"
+								maxLength="12"
 								className="w-100 shadow-none form-control"
 								type="text"
 								value={skillName}
@@ -48,7 +86,7 @@ const EditSkills = () => {
 							>
 								+
 							</Button>
-						</div>
+						</form>
 					</div>
 				</Card.Header>
 				<Card.Body>
@@ -59,14 +97,14 @@ const EditSkills = () => {
 						sm={1}
 						xs={1}
 					>
-						{skills.map((sec, index) => {
+						{skills.map((skill, index) => {
 							return (
 								<div
 									className="d-flex align-items-center text-center justify-content-center "
 									key={index}
 								>
 									<span className="d-flex align-items-center m-2">
-										{` ${sec}`}
+										{skill.name}
 										<AiFillDelete
 											style={{ cursor: "pointer" }}
 											color="red"

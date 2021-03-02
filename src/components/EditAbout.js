@@ -1,11 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const EditAbout = () => {
-	const [value, setValue] = useState();
+const EditAbout = ({ alumni }) => {
+	console.log(alumni.data.phone);
+	const { id } = useParams();
+	const alumniDetails = {
+		firstname: alumni.data.firstname,
+		lastname: alumni.data.lastname,
+		email: alumni.data.email,
+		description: alumni.data.description,
+		availability: alumni.data.availability,
+		flexibility: alumni.data.flexibility,
+		phone: alumni.data.phone,
+	};
+
+	// const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+	const updateAlumni = async (
+		firstname,
+		lastname,
+		// email,
+		availability,
+		flexibility,
+		description,
+		phone
+	) => {
+		console.log(phone);
+		// console.log(firstname);
+		// return;
+		const body = {
+			firstname,
+			lastname,
+			// email,
+			availability: true,
+			flexibility: true,
+			description,
+			phone,
+		};
+		await axios.post(`/alumni/${id}?_method=PUT`, body).then((res) => {
+			console.log(res.data);
+			return "YES";
+		});
+	};
+
+	const [availability, setAvailability] = useState(alumniDetails.availability);
+	const [flexibility, setFlexibility] = useState(alumniDetails.flexibility);
+	const [phone, setPhone] = useState(alumniDetails.phone);
+	// useEffect(() => {}, []);
+
 	return (
 		<>
 			<div className="d-flex flex-row align-items-center mt-4">
@@ -29,11 +76,33 @@ const EditAbout = () => {
 				></div>
 			</div>
 			<Formik
-				initialValues={{ email: "", password: "" }}
+				initialValues={{
+					email: alumniDetails.email,
+					firstname: alumniDetails.firstname,
+					lastname: alumniDetails.lastname,
+					description: alumniDetails.description,
+					availability: availability,
+					flexibility: flexibility,
+					// phone: phone,
+				}}
 				onSubmit={(values, { setSubmitting }) => {
-					const { email, password } = values;
+					const {
+						email,
+						firstname,
+						lastname,
+						description,
+						// phone,
+					} = values;
 					setSubmitting(false);
-					// loginSubmit(email, password);
+					updateAlumni(
+						firstname,
+						lastname,
+						// email,
+						availability,
+						flexibility,
+						description,
+						phone
+					);
 				}}
 				validationSchema={Yup.object({
 					email: Yup.string()
@@ -41,12 +110,16 @@ const EditAbout = () => {
 						.required("Email is required"),
 					firstname: Yup.string().required("Firstname is required"),
 					lastname: Yup.string().required("Lastname is required"),
-					location: Yup.string()
-						.max(15, "Must be 15 charaacters or less")
-						.required("Location is required"),
+					// location: Yup.string()
+					// 	.max(15, "Must be 15 charaacters or less")
+					// 	.required("Location is required"),
 					description: Yup.string()
 						.max(115, "Must be 115 characters or less")
-						.required("Description is required"),
+						.required("Description is required")
+						.min(50, "Must be 50 characters or more"),
+					// phone: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
+					availability: Yup.boolean(),
+					flexibility: Yup.boolean(),
 				})}
 			>
 				{(formik, isSubmitting) => (
@@ -121,8 +194,8 @@ const EditAbout = () => {
 								defaultCountry="LB"
 								className="w-100"
 								placeholder="Enter phone number"
-								value={value}
-								onChange={setValue}
+								value={phone}
+								onChange={setPhone}
 							/>
 						</div>
 						<div className="d-flex flex-row align-items-center mt-5">
@@ -153,7 +226,6 @@ const EditAbout = () => {
 								<Field
 									maxLength={115}
 									rows={4}
-									// cols={3}
 									name="description"
 									className={
 										formik.touched.description && formik.errors.description
@@ -176,23 +248,17 @@ const EditAbout = () => {
 								<Field
 									name="section"
 									as="select"
-									// value={sectionValue}
+									value={availability}
 									className={
-										// selectSectionVal
 										// ? "form-control border-danger selectCourseVal"
 										"form-control"
 									}
-									// onChange={async (e) => {
-									// 	setSectionValue(e.target.value);
-									// 	if (e.target.value !== "0") {
-									// 		setSelectSectionVal(false);
-									// 	} else {
-									// 		setSelectSectionVal(true);
-									// 	}
-									// }}
+									onChange={(e) => {
+										setAvailability(e.target.value);
+									}}
 								>
-									<option value={0}>Yes</option>
-									<option value={0}>No</option>
+									<option value={true}>Yes</option>
+									<option value={false}>No</option>
 								</Field>
 							</div>
 
@@ -201,25 +267,39 @@ const EditAbout = () => {
 								<Field
 									name="section"
 									as="select"
-									// value={sectionValue}
+									value={flexibility}
 									className={
-										// selectSectionVal
 										// ? "form-control border-danger selectCourseVal"
 										"form-control"
 									}
-									// onChange={async (e) => {
-									// 	setSectionValue(e.target.value);
-									// 	if (e.target.value !== "0") {
-									// 		setSelectSectionVal(false);
-									// 	} else {
-									// 		setSelectSectionVal(true);
-									// 	}
-									// }}
+									onChange={(e) => {
+										setFlexibility(e.target.value);
+									}}
 								>
-									<option value={0}>Yes</option>
-									<option value={0}>No</option>
+									<option value={true}>Yes</option>
+									<option value={false}>No</option>
 								</Field>
 							</div>
+						</div>
+						{/* <Button
+							type="submit"
+							style={{ background: "#ffbf0e", border: "none" }}
+							className="mt-5 ml-4 shadow-sm onSave"
+						>
+							Save
+						</Button> */}
+						<div className="form-group">
+							<button
+								onClick={() => {
+									console.log("clicked");
+								}}
+								style={{ background: "#ffbf0e", border: "none" }}
+								type="submit"
+								className="btn btn-primary shadow-sm mt-5 ml-4 onSave"
+								disabled={isSubmitting}
+							>
+								{isSubmitting ? "Please wait..." : "Save"}
+							</button>
 						</div>
 					</Form>
 				)}

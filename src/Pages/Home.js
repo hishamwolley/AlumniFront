@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Form, Dropdown } from "react-bootstrap";
+import {
+	Container,
+	Row,
+	Col,
+	Card,
+	Form,
+	Dropdown,
+	Spinner,
+} from "react-bootstrap";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -9,13 +17,14 @@ import Video from "../video/Video Introduction to life at Codi (full version).mp
 function Home() {
 	const getAlumniStudents = async () => {
 		await axios.get(`alumni?page=${pageNumber}`).then((res) => {
-			console.log(res);
+			setLoading(false);
 			setPagination(res.data.meta);
 			setAlumnis(res.data.data);
 			setShowPagination(true);
 		});
 	};
 
+	const [loading, setLoading] = useState(true);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [showPagination, setShowPagination] = useState(false);
 	const [pagination, setPagination] = useState([]);
@@ -124,51 +133,67 @@ function Home() {
 						</div>
 					</div>
 				</div>
-				<Container fluid={"true"} style={{ width: "100%" }} className="mt-5">
-					<Row lg={3} md={2} sm={1} xs={1}>
-						{alumnis.map((alumni, index) => {
-							return (
-								<Col key={index} style={{ padding: "0px", margin: "0px" }}>
-									<Card
-										className="text-center shadow mb-4 mt-3  mx-auto pt-2"
-										style={{ width: "85%" }}
-									>
-										<Link
-											to={`/profile/${alumni.id}`}
-											style={{ textDecoration: "none", color: "#000" }}
+				<Container
+					fluid={"true"}
+					style={{ width: "100%", position: "relative", minHeight: "50vh" }}
+					className="mt-5"
+				>
+					{loading ? (
+						<Row>
+							<div className="vertical-center">
+								<Spinner animation="grow" />
+							</div>
+						</Row>
+					) : (
+						<Row lg={3} md={2} sm={1} xs={1}>
+							{alumnis.map((alumni, index) => {
+								console.log(alumni);
+								return (
+									<Col key={index} style={{ padding: "0px", margin: "0px" }}>
+										<Card
+											className="text-center shadow mb-4 mt-3  mx-auto pt-2"
+											style={{ width: "85%" }}
 										>
-											<Card.Img
-												className=" rounded-circle mx-auto mt-2"
-												style={{ width: "80px", height: "80px" }}
-												variant={"top"}
-												src="https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-											/>
-										</Link>
-										<Card.Body>
 											<Link
 												to={`/profile/${alumni.id}`}
 												style={{ textDecoration: "none", color: "#000" }}
 											>
-												<Card.Title>
-													{alumni.firstname} {alumni.lastname}
-												</Card.Title>
+												<Card.Img
+													className=" rounded-circle mx-auto mt-2"
+													style={{ width: "80px", height: "80px" }}
+													variant={"top"}
+													src="https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+												/>
 											</Link>
-											<Card.Text>Availability</Card.Text>
-											<Card.Link href="https://www.github.com" target="_blank">
-												<FaGithub size="2rem" color="#000" />
-											</Card.Link>
-											<Card.Link
-												href="https://www.linkedin.com"
-												target="_blank"
-											>
-												<FaLinkedin size="2rem" color="#0e76a8 " />
-											</Card.Link>
-										</Card.Body>
-									</Card>
-								</Col>
-							);
-						})}
-					</Row>
+											<Card.Body>
+												<Link
+													to={`/profile/${alumni.id}`}
+													style={{ textDecoration: "none", color: "#000" }}
+												>
+													<Card.Title>
+														{alumni.firstname} {alumni.lastname}
+													</Card.Title>
+												</Link>
+												<Card.Text>Availability</Card.Text>
+												<Card.Link
+													href="https://www.github.com"
+													target="_blank"
+												>
+													<FaGithub size="2rem" color="#000" />
+												</Card.Link>
+												<Card.Link
+													href="https://www.linkedin.com"
+													target="_blank"
+												>
+													<FaLinkedin size="2rem" color="#0e76a8 " />
+												</Card.Link>
+											</Card.Body>
+										</Card>
+									</Col>
+								);
+							})}
+						</Row>
+					)}
 				</Container>
 				{showPagination ? (
 					<Pagination

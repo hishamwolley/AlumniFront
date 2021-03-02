@@ -5,7 +5,7 @@ import { default as CodiLogoWhite } from "../White.svg";
 
 const Footer = () => {
 	return (
-		<footer>
+		<footer style={{ position: "relative", bottom: "0", width: "100%" }}>
 			<Card
 				style={{
 					height: "22.5rem",

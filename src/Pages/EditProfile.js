@@ -1,16 +1,44 @@
-import React, { useState } from "react";
-import { Card } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Card, Spinner } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import EditAbout from "../components/EditAbout";
 import EditSkills from "../components/EditSkills";
+import axios from "axios";
+import EditAuth from "../components/EditAuth";
 
 const Trial2 = () => {
 	return <div>22222222</div>;
 };
 
 const EditProfile = () => {
-	const [about, setAbout] = useState(true);
+	const [loading, setLoading] = useState(true);
+	const [isAuth, setIsAuth] = useState(false);
+	const { id } = useParams();
+	const [about, setAbout] = useState(false);
 	const [education, setEducation] = useState(false);
 	const [skills, setSkills] = useState(false);
+	const [alumni, setAlumni] = useState([]);
+
+	const getProfileInfo = async () => {
+		axios.get(`alumni/${id}`).then((res) => {
+			// console.log(res.data.isLogged);
+			if (!res.data.isLogged) {
+				console.log("asdsad");
+				setAbout(false);
+				setLoading(false);
+				setIsAuth(true);
+
+				return;
+			}
+			setAlumni(res.data);
+			setLoading(false);
+			setAbout(true);
+		});
+	};
+
+	useEffect(() => {
+		getProfileInfo();
+	}, []);
 	return (
 		<section
 			style={{
@@ -39,6 +67,9 @@ const EditProfile = () => {
 								padding: "0.5rem 0.5rem 0.5rem 1rem",
 							}}
 							onClick={() => {
+								if (isAuth) {
+									return;
+								}
 								setAbout(true);
 								setEducation(false);
 								setSkills(false);
@@ -56,6 +87,9 @@ const EditProfile = () => {
 								padding: "0.5rem 0.5rem 0.5rem 1rem",
 							}}
 							onClick={() => {
+								if (isAuth) {
+									return;
+								}
 								setAbout(false);
 								setSkills(false);
 								setEducation(true);
@@ -73,6 +107,9 @@ const EditProfile = () => {
 								padding: "0.5rem 0.5rem 0.5rem 1rem",
 							}}
 							onClick={() => {
+								if (isAuth) {
+									return;
+								}
 								setAbout(false);
 								setEducation(false);
 								setSkills(true);
@@ -96,9 +133,15 @@ const EditProfile = () => {
 					<p>General Information</p>
 				</Card.Header>
 				<Card.Body style={{ padding: "0 1.25rem" }}>
-					{about ? <EditAbout /> : null}
+					{isAuth ? <EditAuth /> : null}
+					{about ? <EditAbout alumni={alumni} /> : null}
 					{education ? <Trial2 /> : null}
-					{skills ? <EditSkills /> : null}
+					{skills ? <EditSkills alumni={alumni} /> : null}
+					{loading ? (
+						<div className="vertical-center">
+							<Spinner animation="grow" />
+						</div>
+					) : null}
 				</Card.Body>
 			</Card>
 			<Card className="w-25 shadow border-0" style={{ height: "250px" }}></Card>

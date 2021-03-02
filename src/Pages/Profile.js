@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Card, Tabs, Tab } from "react-bootstrap";
+import { Card, Tabs, Tab, Row, Col, Spinner } from "react-bootstrap";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import StarRatings from "react-star-ratings";
 import { Link, useParams } from "react-router-dom";
@@ -12,8 +12,11 @@ const Profile = () => {
 	const { id } = useParams();
 	const [alumni, setAlumni] = useState({});
 	const [isLogged, setIsLogged] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const getUserInfo = async () => {
 		await axios.get(`/alumni/${id}`).then((res) => {
+			// console.log(res.data);
+			setLoading(false);
 			setAlumni(res.data.data);
 			if (res.data.isLogged) {
 				setIsLogged(true);
@@ -33,6 +36,7 @@ const Profile = () => {
 			id="profile"
 			className="d-flex flex-row mx-auto mt-4"
 			style={{
+				minHeight: "100vh",
 				paddingLeft: "1.5rem",
 				borderRadius: "10px",
 				width: "75%",
@@ -44,150 +48,102 @@ const Profile = () => {
 				className=" mt-3 shadow mr-5 p-2 bored-0"
 				id="profile-left"
 			>
-				<Card.Body>
-					<section className="text-center">
-						<div
-							className="mx-auto mt-3"
-							style={{ width: "15rem", height: "15rem" }}
-						>
-							<img
-								className="rounded-circle shadow-lg "
-								style={{ width: "100%", minHeight: "100%" }}
-								src="https://i.guim.co.uk/img/media/2989811a5ef7eab9d1e06286fea02a2ab52e670d/0_97_4927_2957/master/4927.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=618f5d45b2225b0cc174f5568bcbd1f9"
-								// src={`http://localhost:8000/storage/images/${alumni.image}`}
-							/>
-						</div>
-						<h4 className="mt-4">
-							{alumni.firstname} {alumni.lastname}
-						</h4>
-
-						<article className="text-left mt-5 smallText">
-							<div className="d-flex flex-row align-items-center ">
-								<span
-									style={{ display: "inline" }}
-									className="mr-2 font-weight-bold text-secondary"
-								>
-									Description
-								</span>
-								<div
-									style={{
-										width: "100%",
-										borderBottom: "1px solid rgba(0,0,0,0.3)",
-										display: "inline-block",
-									}}
-								></div>
+				{loading ? (
+					<div className="vertical-center">
+						<Spinner animation="grow" />
+					</div>
+				) : (
+					<Card.Body>
+						<section className="text-center">
+							<div
+								className="mx-auto mt-3"
+								style={{ width: "15rem", height: "15rem" }}
+							>
+								<img
+									className="rounded-circle shadow-lg "
+									style={{ width: "100%", minHeight: "100%" }}
+									src="https://i.guim.co.uk/img/media/2989811a5ef7eab9d1e06286fea02a2ab52e670d/0_97_4927_2957/master/4927.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=618f5d45b2225b0cc174f5568bcbd1f9"
+									// src={`http://localhost:8000/storage/images/${alumni.image}`}
+								/>
 							</div>
-							<p className="mt-4 pl-3 text-center">
-								{/* lorem "Sed ut perspiciatis unde omnis iste natus error sit
+							<h4 className="mt-4">
+								{alumni.firstname} {alumni.lastname}
+							</h4>
+
+							<article className="text-left mt-5 smallText">
+								<div className="d-flex flex-row align-items-center ">
+									<span
+										style={{ display: "inline" }}
+										className="mr-2 font-weight-bold text-secondary"
+									>
+										Description
+									</span>
+									<div
+										style={{
+											width: "100%",
+											borderBottom: "1px solid rgba(0,0,0,0.3)",
+											display: "inline-block",
+										}}
+									></div>
+								</div>
+								<p className="mt-4 pl-3 text-center">
+									{/* lorem "Sed ut perspiciatis unde omnis iste natus error sit
 								voluptatem accusantium doloremque laudantium, totam rem aperiam,
 								eaque ipsa quae ab illo inventore veritatis et quasi architecto */}
-								{alumni.description}
-							</p>
-						</article>
-						<article className="text-center mt-4 smallText ">
-							<div className="d-flex flex-row align-items-center">
-								<span
-									style={{ display: "inline" }}
-									className="mr-2 font-weight-bold text-secondary"
+									{alumni.description}
+								</p>
+							</article>
+							<article className="text-center mt-4 smallText ">
+								<div className="d-flex flex-row align-items-center">
+									<span
+										style={{ display: "inline" }}
+										className="mr-2 font-weight-bold text-secondary"
+									>
+										Skills
+									</span>
+									<div
+										style={{
+											width: "100%",
+											borderBottom: "1px solid rgba(0,0,0,0.3)",
+											display: "inline-block",
+										}}
+									></div>
+								</div>
+								<Row
+									lg={3}
+									md={2}
+									sm={3}
+									xs={3}
+									style={{ width: "81%" }}
+									className=" m-0 mx-auto"
 								>
-									Skills
-								</span>
-								<div
-									style={{
-										width: "100%",
-										borderBottom: "1px solid rgba(0,0,0,0.3)",
-										display: "inline-block",
-									}}
-								></div>
-							</div>
-							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
-								<div className="pt-1">
-									<span>Javascript</span>
-								</div>
-								<StarRatings
-									rating={4}
-									starRatedColor="#fada5e"
-									// changeRating={this.changeRating}
-									numberOfStars={5}
-									starDimension={"1rem"}
-									starSpacing="2px"
-									name="rating"
-								/>
-							</div>
-							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
-								<div className="pt-1">
-									<span>Javascript</span>
-								</div>
-								<StarRatings
-									rating={4}
-									starRatedColor="#fada5e"
-									// changeRating={this.changeRating}
-									numberOfStars={5}
-									starDimension={"1rem"}
-									starSpacing="2px"
-									name="rating"
-								/>
-							</div>
-							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
-								<div className="pt-1">
-									<span>Javascript</span>
-								</div>
-								<StarRatings
-									rating={4}
-									starRatedColor="#fada5e"
-									// changeRating={this.changeRating}
-									numberOfStars={5}
-									starDimension={"1rem"}
-									starSpacing="2px"
-									name="rating"
-								/>
-							</div>
-							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
-								<div className="pt-1">
-									<span>Javascript</span>
-								</div>
-								<StarRatings
-									rating={4}
-									starRatedColor="#fada5e"
-									// changeRating={this.changeRating}
-									numberOfStars={5}
-									starDimension={"1rem"}
-									starSpacing="2px"
-									name="rating"
-								/>
-							</div>
+									<Col className="p-0 mt-3 ">
+										<span className="small shadow-sm border rounded p-1">
+											asdasdasdas
+										</span>
+									</Col>
 
-							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
-								<div className="pt-1">
-									<span>Javascript</span>
-								</div>
-								<StarRatings
-									rating={4}
-									starRatedColor="#fada5e"
-									// changeRating={this.changeRating}
-									numberOfStars={5}
-									starDimension={"1rem"}
-									starSpacing="2px"
-									name="rating"
-								/>
-							</div>
-							<div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2">
-								<div className="pt-1">
-									<span>Javascript</span>
-								</div>
-								<StarRatings
-									rating={4}
-									starRatedColor="#fada5e"
-									// changeRating={this.changeRating}
-									numberOfStars={5}
-									starDimension={"1rem"}
-									starSpacing="2px"
-									name="rating"
-								/>
-							</div>
-						</article>
-					</section>
-				</Card.Body>
+									<Col className="p-0 mt-3">
+										<span className="small shadow-sm border rounded p-1">
+											asdasdasdas
+										</span>
+									</Col>
+
+									<Col className="p-0 mt-3">
+										<span className="small shadow-sm border rounded p-1">
+											asdasdasdas
+										</span>
+									</Col>
+								</Row>
+
+								{/* <div className="d-flex flex-row align-items-center justify-content-between w-75 mx-auto pl-2 mt-2"> */}
+								{/* <p>asdas</p> */}
+								{/* <p>asdas</p> */}
+								{/* </div> */}
+							</article>
+						</section>
+					</Card.Body>
+				)}
 			</Card>
 
 			<Card
@@ -200,113 +156,118 @@ const Profile = () => {
 						<Link to={`/edit/${alumni.id}`}>Edit</Link>
 					</Card.Header>
 				) : null}
+				{loading ? (
+					<div className="vertical-center">
+						<Spinner animation="grow" />
+					</div>
+				) : (
+					<Card.Body>
+						<section className="px-3 ">
+							<section className="w-25 mx-auto">
+								<div className=" d-flex flex-row justify-content-center mt-3">
+									<FaGithub size="2rem" />
+									<FaLinkedin size="2rem" color="#0e76a8" className="ml-3" />
+								</div>
+								<div className="flex-row d-flex justify-content-center align-items-center mt-4 ">
+									<div
+										style={{
+											width: "1rem",
+											height: "1rem",
+											background: "green",
+											borderRadius: "50%",
+										}}
+									></div>
+									<span className="ml-3">Available</span>
+								</div>
+							</section>
+							{/* <hr className="mt-5" /> */}
+							<Tabs
+								defaultActiveKey="About"
+								id="uncontrolled-tab-example"
+								style={{ marginTop: "3rem", textAlign: "left" }}
+							>
+								<Tab eventKey="About" title="About">
+									<div className="d-flex flex-row align-items-center text-center mt-4">
+										<div
+											style={{
+												width: "40%",
+												borderBottom: "1px solid rgba(0,0,0,0.3)",
+												display: "inline-block",
+											}}
+										></div>
+										<span className=" text-secondary small">
+											Contact Information
+										</span>
+										<div
+											style={{
+												width: "40%",
+												borderBottom: "1px solid rgba(0,0,0,0.3)",
+												display: "inline-block",
+											}}
+										></div>
+									</div>
 
-				<Card.Body>
-					<section className="px-5 ">
-						<section className="w-25 mx-auto">
-							<div className=" d-flex flex-row justify-content-center mt-3">
-								<FaGithub size="2rem" />
-								<FaLinkedin size="2rem" color="#0e76a8" className="ml-3" />
-							</div>
-							<div className="flex-row d-flex justify-content-center align-items-center mt-4 ">
-								<div
-									style={{
-										width: "1rem",
-										height: "1rem",
-										background: "green",
-										borderRadius: "50%",
-									}}
-								></div>
-								<span className="ml-3">Available</span>
-							</div>
+									<div className="flex-row d-flex justify-content-between mt-4 ">
+										<p className="font-weight-bold">Email</p>
+										<span className="text-primary" style={{ width: "40%" }}>
+											{alumni.email}
+										</span>
+									</div>
+									<div className="flex-row d-flex justify-content-between ">
+										<p className="font-weight-bold">Location</p>
+										<span style={{ width: "40%" }} className="text-primary">
+											{alumni.city}
+										</span>
+									</div>
+									<div className="flex-row d-flex justify-content-between ">
+										<p className="font-weight-bold">Phone</p>
+										<span style={{ width: "40%" }} className="text-primary">
+											{alumni.phone}
+										</span>
+									</div>
+									<div className="d-flex flex-row align-items-center text-center mt-2">
+										<div
+											style={{
+												width: "40%",
+												borderBottom: "1px solid rgba(0,0,0,0.3)",
+												display: "inline-block",
+											}}
+										></div>
+										<span className="text-secondary small">
+											General Information
+										</span>
+										<div
+											style={{
+												width: "40%",
+												borderBottom: "1px solid rgba(0,0,0,0.3)",
+												display: "inline-block",
+											}}
+										></div>
+									</div>
+
+									<div className="flex-row d-flex justify-content-between mt-4 align-items-center ">
+										<p className="m-0">Birthday</p>
+										<span style={{ width: "40%" }}>{alumni.birthdate}</span>
+									</div>
+
+									<div className="flex-row d-flex justify-content-between mt-4  align-items-center">
+										<p className="m-0">Cohort</p>
+										<span style={{ width: "40%" }}>B0{alumni.cohort}</span>
+									</div>
+									<div className="flex-row d-flex justify-content-between mt-4  align-items-center">
+										<p className="m-0">Flexibility</p>
+										<span style={{ width: "40%" }}>
+											{alumni.flexibility ? "Yes" : "No"}
+										</span>
+									</div>
+								</Tab>
+								<Tab eventKey="Education" title="Education">
+									<p className="mt-4">2</p>
+								</Tab>
+							</Tabs>
 						</section>
-						{/* <hr className="mt-5" /> */}
-						<Tabs
-							defaultActiveKey="About"
-							id="uncontrolled-tab-example"
-							style={{ marginTop: "3rem", textAlign: "left" }}
-						>
-							<Tab eventKey="About" title="About">
-								<div className="d-flex flex-row align-items-center text-center mt-4">
-									<div
-										style={{
-											width: "40%",
-											borderBottom: "1px solid rgba(0,0,0,0.3)",
-											display: "inline-block",
-										}}
-									></div>
-									<span className=" text-secondary small">
-										Contact Information
-									</span>
-									<div
-										style={{
-											width: "40%",
-											borderBottom: "1px solid rgba(0,0,0,0.3)",
-											display: "inline-block",
-										}}
-									></div>
-								</div>
-
-								<div className="flex-row d-flex justify-content-between mt-4 ">
-									<p className="font-weight-bold">Email</p>
-									<span className="text-primary" style={{ width: "40%" }}>
-										{alumni.email}
-									</span>
-								</div>
-								<div className="flex-row d-flex justify-content-between ">
-									<p className="font-weight-bold">Location</p>
-									<span style={{ width: "40%" }} className="text-primary">
-										{alumni.city}
-									</span>
-								</div>
-								<div className="flex-row d-flex justify-content-between ">
-									<p className="font-weight-bold">Phone</p>
-									<span style={{ width: "40%" }} className="text-primary">
-										{alumni.phone}
-									</span>
-								</div>
-								<div className="d-flex flex-row align-items-center text-center mt-2">
-									<div
-										style={{
-											width: "40%",
-											borderBottom: "1px solid rgba(0,0,0,0.3)",
-											display: "inline-block",
-										}}
-									></div>
-									<span className="text-secondary small">
-										General Information
-									</span>
-									<div
-										style={{
-											width: "40%",
-											borderBottom: "1px solid rgba(0,0,0,0.3)",
-											display: "inline-block",
-										}}
-									></div>
-								</div>
-
-								<div className="flex-row d-flex justify-content-between mt-4 align-items-center ">
-									<p className="m-0">Birthday</p>
-									<span style={{ width: "40%" }}>{alumni.birthdate}</span>
-								</div>
-
-								<div className="flex-row d-flex justify-content-between mt-4  align-items-center">
-									<p className="m-0">Cohort</p>
-									<span style={{ width: "40%" }}>B0{alumni.cohort}</span>
-								</div>
-								<div className="flex-row d-flex justify-content-between mt-4  align-items-center">
-									<p className="m-0">Flexibility</p>
-									<span style={{ width: "40%" }}>
-										{alumni.flexibility ? "Yes" : "No"}
-									</span>
-								</div>
-							</Tab>
-							<Tab eventKey="Education" title="Education">
-								<p className="mt-4">2</p>
-							</Tab>
-						</Tabs>
-					</section>
-				</Card.Body>
+					</Card.Body>
+				)}
 			</Card>
 		</main>
 	);
