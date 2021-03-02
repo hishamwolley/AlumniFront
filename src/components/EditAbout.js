@@ -97,7 +97,7 @@ const EditAbout = ({ alumni }) => {
 					updateAlumni(
 						firstname,
 						lastname,
-						// email,
+						email,
 						availability,
 						flexibility,
 						description,
