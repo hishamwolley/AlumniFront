@@ -57,8 +57,8 @@ function Home() {
 								position: "absolute",
 								width: "100%",
 								left: "50%",
-								top: "50%",
-								height: "100%",
+								top: "45%",
+								height: "93%",
 								objectFit: "cover",
 								transform: "translate(-50%,-50%)",
 								zIndex: "0",
@@ -69,11 +69,15 @@ function Home() {
 
 						<div
 							className="vertical-center "
-							style={{ maxWidth: "450px", minWidth: "300px" }}
+							style={{
+								maxWidth: "450px",
+								minWidth: "300px",
+								background: "#ffffff",
+								padding: "15px",
+								opacity: "0.5",
+							}}
 						>
-							<h1 className="text-white">
-								Looking for Web Developers to fill the gap?
-							</h1>
+							<h1 className="text-danger">Looking for Web Developers?</h1>
 							<Card.Text
 								className="text-danger mx-auto font-weight-bold mt-4"
 								style={{ maxWidth: "450px", minWidth: "300px" }}
@@ -113,9 +117,12 @@ function Home() {
 							</Form>
 							<Dropdown>
 								<Dropdown.Toggle
-									variant="success"
+									variant="danger"
 									id="dropdown-basic"
-									style={{ height: "2.25rem", borderRadius: "0px" }}
+									style={{
+										height: "2.25rem",
+										borderRadius: "0px",
+									}}
 								>
 									All
 								</Dropdown.Toggle>
