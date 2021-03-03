@@ -31,7 +31,7 @@ const Footer = () => {
 							className="footerLinks"
 							target="_blank"
 						>
-							About Codi
+							<b>About Codi</b>
 						</a>
 					</p>
 
@@ -41,7 +41,7 @@ const Footer = () => {
 							className="footerLinks"
 							target="_blank"
 						>
-							Our Team
+							<b>Our Team</b>
 						</a>
 					</p>
 
@@ -51,7 +51,7 @@ const Footer = () => {
 							className="footerLinks"
 							target="_blank"
 						>
-							Codi Kids
+							<b> Codi Kids</b>{" "}
 						</a>
 					</p>
 
@@ -61,13 +61,13 @@ const Footer = () => {
 							className="footerLinks"
 							target="_blank"
 						>
-							Contact Us
+							<b> Contact Us</b>{" "}
 						</a>
 					</p>
 				</div>
 				<div className="w-25 footerSpacing">
 					<p className=" text-center h5 w-100" style={{ color: "#ffffff" }}>
-						Follow us on Social Media
+						<b>Follow us on Social Media</b>
 					</p>
 					<div className="d-flex flex-row justify-content-center mt-4">
 						<div className="p-2 border mx-2 ">

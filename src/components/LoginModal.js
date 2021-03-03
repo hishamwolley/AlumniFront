@@ -92,8 +92,8 @@ function LoginModal(props) {
 							<div className="form-group">
 								<button
 									style={{
-										background: "#ff0b79",
-										borderColor: "#ff0b79",
+										background: "#dc3545",
+										borderColor: "#dc3545",
 									}}
 									type="submit"
 									className="btn btn-primary mt-4"
