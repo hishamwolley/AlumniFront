@@ -53,6 +53,7 @@ function Home() {
 							autoPlay
 							muted
 							loop
+							controls
 							style={{
 								position: "absolute",
 								width: "100%",
@@ -72,17 +73,21 @@ function Home() {
 							style={{
 								maxWidth: "450px",
 								minWidth: "300px",
-								background: "#ffffff",
-								padding: "15px",
-								opacity: "0.5",
+								// background: "#ffffff",
+								// padding: "15px",
+								// opacity: "0.5",
 							}}
 						>
-							<h1 className="text-danger">Looking for Web Developers?</h1>
+							<h1 className="text-danger">
+								<b>Looking for Web Developers?</b>
+							</h1>
 							<Card.Text
 								className="text-danger mx-auto font-weight-bold mt-4"
 								style={{ maxWidth: "450px", minWidth: "300px" }}
 							>
-								Get to know our Codi Graduates Below!
+								<h3>
+									<b>Get to know our Codi Graduates!</b>
+								</h3>
 							</Card.Text>
 						</div>
 					</Card.Body>
