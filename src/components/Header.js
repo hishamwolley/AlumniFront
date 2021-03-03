@@ -35,14 +35,14 @@ const Header = () => {
 						className="mr-4"
 						style={{ cursor: "pointer", color: "#ff0b79 " }}
 					>
-						Home
+						<b>Home</b>
 					</Link>
 					<a
 						href="https://codi.tech/about/"
 						className="mr-4"
 						style={{ cursor: "pointer", color: "#ff0b79 " }}
 					>
-						About
+						<b>About</b>
 					</a>
 
 					{token ? (
@@ -66,7 +66,7 @@ const Header = () => {
 							className=" loginButton"
 							style={{ borderRadius: "3px" }}
 						>
-							logout
+							Logout
 						</Button>
 					) : (
 						<Button
@@ -76,7 +76,7 @@ const Header = () => {
 							className=" loginButton"
 							style={{ borderRadius: "3px" }}
 						>
-							Login
+							<b>Login</b>
 						</Button>
 					)}
 					<LoginModal
