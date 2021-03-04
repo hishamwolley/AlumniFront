@@ -23,14 +23,12 @@ const FourOFour = () => {
 				</p>
 
 				<Button
-					variant="danger"
-					// style={{ cursor: "pointer", background: "#ff0b79 " }}
 					className="mt-4"
 					onClick={() => {
 						history.goBack();
 					}}
 				>
-					<b>Go Back</b>
+					Go Back
 				</Button>
 			</div>
 		</main>

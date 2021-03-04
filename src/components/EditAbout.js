@@ -7,7 +7,6 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const EditAbout = ({ alumni }) => {
-	console.log(alumni.data.phone);
 	const { id } = useParams();
 	const alumniDetails = {
 		firstname: alumni.data.firstname,
@@ -19,42 +18,40 @@ const EditAbout = ({ alumni }) => {
 		phone: alumni.data.phone,
 	};
 
-	// const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
 	const updateAlumni = async (
 		firstname,
 		lastname,
-		// email,
+		email,
 		availability,
 		flexibility,
 		description,
 		phone
 	) => {
-		console.log(phone);
-		// console.log(firstname);
-		// return;
 		const body = {
 			firstname,
 			lastname,
 			// email,
-			availability: true,
-			flexibility: true,
+			availability,
+			flexibility,
 			description,
 			phone,
 		};
 		await axios.post(`/alumni/${id}?_method=PUT`, body).then((res) => {
-			console.log(res.data);
-			return "YES";
+			setSuccess(true);
+			setTimeout(() => {
+				setSuccess(false);
+			}, 2000);
 		});
 	};
 
 	const [availability, setAvailability] = useState(alumniDetails.availability);
 	const [flexibility, setFlexibility] = useState(alumniDetails.flexibility);
 	const [phone, setPhone] = useState(alumniDetails.phone);
-	// useEffect(() => {}, []);
+	const [success, setSuccess] = useState(false);
 
 	return (
 		<>
+			{success ? <h2>success</h2> : null}
 			<div className="d-flex flex-row align-items-center mt-4">
 				<div
 					style={{
@@ -81,23 +78,14 @@ const EditAbout = ({ alumni }) => {
 					firstname: alumniDetails.firstname,
 					lastname: alumniDetails.lastname,
 					description: alumniDetails.description,
-					availability: availability,
-					flexibility: flexibility,
-					// phone: phone,
 				}}
 				onSubmit={(values, { setSubmitting }) => {
-					const {
-						email,
-						firstname,
-						lastname,
-						description,
-						// phone,
-					} = values;
+					const { email, firstname, lastname, description } = values;
 					setSubmitting(false);
 					updateAlumni(
 						firstname,
 						lastname,
-						// email,
+						email,
 						availability,
 						flexibility,
 						description,
@@ -117,9 +105,6 @@ const EditAbout = ({ alumni }) => {
 						.max(115, "Must be 115 characters or less")
 						.required("Description is required")
 						.min(50, "Must be 50 characters or more"),
-					// phone: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
-					availability: Yup.boolean(),
-					flexibility: Yup.boolean(),
 				})}
 			>
 				{(formik, isSubmitting) => (
@@ -245,54 +230,38 @@ const EditAbout = ({ alumni }) => {
 						<div className="d-flex flex-row mt-5 text-center w-75 mx-auto">
 							<div className="form-group mx-4 w-50">
 								<label htmlFor="course">Availability</label>
-								<Field
+								<select
 									name="section"
-									as="select"
 									value={availability}
-									className={
-										// ? "form-control border-danger selectCourseVal"
-										"form-control"
-									}
+									className={"form-control"}
 									onChange={(e) => {
-										setAvailability(e.target.value);
+										const result = parseInt(e.target.value);
+										setAvailability(result);
 									}}
 								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</Field>
+									<option value={1}>Yes</option>
+									<option value={0}>No</option>
+								</select>
 							</div>
 
 							<div className="form-group mx-4 w-50">
 								<label htmlFor="course">Flexibility</label>
-								<Field
+								<select
 									name="section"
-									as="select"
 									value={flexibility}
-									className={
-										// ? "form-control border-danger selectCourseVal"
-										"form-control"
-									}
+									className={"form-control"}
 									onChange={(e) => {
-										setFlexibility(e.target.value);
+										const result = parseInt(e.target.value);
+										setFlexibility(result);
 									}}
 								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</Field>
+									<option value={1}>Yes</option>
+									<option value={0}>No</option>
+								</select>
 							</div>
 						</div>
-						{/* <Button
-							type="submit"
-							style={{ background: "#ffbf0e", border: "none" }}
-							className="mt-5 ml-4 shadow-sm onSave"
-						>
-							Save
-						</Button> */}
 						<div className="form-group">
 							<button
-								onClick={() => {
-									console.log("clicked");
-								}}
 								style={{ background: "#ffbf0e", border: "none" }}
 								type="submit"
 								className="btn btn-primary shadow-sm mt-5 ml-4 onSave"

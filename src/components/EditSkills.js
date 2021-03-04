@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Card, Button, Row } from "react-bootstrap";
 import { AiFillDelete } from "react-icons/ai";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const EditSkills = ({ alumni }) => {
-	console.log(alumni.skills);
+	const { id } = useParams();
 	const [skills, setSkills] = useState(alumni.skills);
 	const [skillName, setSkillName] = useState();
+	const [dupErr, setDupErr] = useState(false);
 	return (
 		<div>
 			<div className="d-flex flex-row align-items-center mt-4 ">
@@ -17,7 +20,6 @@ const EditSkills = ({ alumni }) => {
 					}}
 				></div>
 				<span className="mx-2 small text-secondary text-center">Skills</span>
-
 				<div
 					style={{
 						width: "45%",
@@ -26,11 +28,16 @@ const EditSkills = ({ alumni }) => {
 					}}
 				></div>
 			</div>
+
 			<Card className="mt-5">
 				<Card.Header>
 					<div className="d-flex flex-row justify-content-between align-items-center">
 						<div>
 							<p>Add Skills</p>
+							{dupErr ? (
+								<p className="text-danger small">Can't add duplicate skills</p>
+							) : null}
+
 							<span className="position-relative fixed-bottom font-italic text-secondary small">
 								You can add up to 12 Skills!
 							</span>
@@ -39,19 +46,19 @@ const EditSkills = ({ alumni }) => {
 						<form
 							className="form-group d-flex flex-row "
 							onSubmit={(e) => {
-								console.log("clicked");
-								// if (skills.length === 0) {
-								// 	// setError(true);
-								// 	return;
-								// } else {
-								// 	// setError(false);
-								// }
-								// if (skills.length >= 6) {
-								// 	alert("Maximum amount of sections added");
-								// 	return;
-								// }
-								setSkills([...skills, skillName]);
-								setSkillName("");
+								const skill = { skill: skillName };
+								axios
+									.post(`/alumni/${id}?_method=PUT`, skill)
+									.then((res) => {
+										setDupErr(false);
+										setSkills(res.data.alumni);
+									})
+									.catch((e) => {
+										const err = e.response.data.message;
+										if (err.includes("Duplicate")) {
+											setDupErr(true);
+										}
+									});
 								e.preventDefault();
 							}}
 						>
@@ -60,30 +67,11 @@ const EditSkills = ({ alumni }) => {
 								maxLength="12"
 								className="w-100 shadow-none form-control"
 								type="text"
-								value={skillName}
 								onChange={(e) => {
 									setSkillName(e.target.value);
 								}}
 							/>
-							<Button
-								size="sm ml-2"
-								onClick={() => {
-									console.log("clicked");
-									// if (skills.length === 0) {
-									// 	// setError(true);
-									// 	return;
-									// } else {
-									// 	// setError(false);
-									// }
-									// if (skills.length >= 6) {
-									// 	alert("Maximum amount of sections added");
-									// 	return;
-									// }
-									setSkills([...skills, skillName]);
-									setSkillName("");
-									console.log(skills);
-								}}
-							>
+							<Button size="sm ml-2" type="submit">
 								+
 							</Button>
 						</form>

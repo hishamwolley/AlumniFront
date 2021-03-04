@@ -7,6 +7,7 @@ import cookie from "js-cookie";
 import UserContext from "./UserContext";
 function LoginModal(props) {
 	const { token, setToken } = useContext(UserContext);
+	const [loginError, setLoginError] = useState(false);
 
 	const loginSubmit = async (email, password) => {
 		const body = { email: email, password: password };
@@ -23,6 +24,7 @@ function LoginModal(props) {
 				.then(props.onHide);
 		} catch (error) {
 			console.log(error.response.data);
+			setLoginError(error.response.data.error);
 		}
 	};
 	return (
@@ -36,6 +38,11 @@ function LoginModal(props) {
 				<Modal.Title id="contained-modal-title-vcenter ">Login</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
+				{loginError ? (
+					<p className="text-danger small">
+						Invalid Email or Password, please try again.
+					</p>
+				) : null}
 				<Formik
 					initialValues={{ email: "", password: "" }}
 					onSubmit={(values, { setSubmitting }) => {
@@ -92,8 +99,8 @@ function LoginModal(props) {
 							<div className="form-group">
 								<button
 									style={{
-										background: "#dc3545",
-										borderColor: "#dc3545",
+										background: "#ff0b79",
+										borderColor: "#ff0b79",
 									}}
 									type="submit"
 									className="btn btn-primary mt-4"

@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-datepicker/dist/react-datepicker.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Profile from "./Pages/Profile";
 import Home from "./Pages/Home";
 import EditProfile from "./Pages/EditProfile";
 import FourOFour from "./Pages/FourOFour";
+import Register from "./Pages/Register";
 import ScrollToTop from "./components/ScrollToTop";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
@@ -46,6 +48,9 @@ function App() {
 					<Switch>
 						<Route exact path="/">
 							<Home />
+						</Route>
+						<Route exact path="/register">
+							<Register />
 						</Route>
 						<Route exact path="/profile/:id">
 							<Profile />

@@ -33,23 +33,33 @@ const Header = () => {
 					<Link
 						to="/"
 						className="mr-4"
-						style={{ cursor: "pointer", color: "#dc3545 " }}
+						style={{ cursor: "pointer", color: "#ff0b79 " }}
 					>
-						<b>Home</b>
+						Home
 					</Link>
 					<a
 						href="https://codi.tech/about/"
 						className="mr-4"
-						style={{ cursor: "pointer", color: "#dc3545" }}
+						style={{ cursor: "pointer", color: "#ff0b79 " }}
 					>
-						<b>About</b>
+						About
 					</a>
+
+					{!token && (
+						<Link
+							to={"/register"}
+							className="mr-4"
+							style={{ cursor: "pointer", color: "red" }}
+						>
+							Register
+						</Link>
+					)}
 
 					{token ? (
 						<Link
 							to={`/profile/${alumniId}`}
 							className="mr-4"
-							style={{ cursor: "pointer", color: "#dc3545" }}
+							style={{ cursor: "pointer", color: "red" }}
 						>
 							Profile
 						</Link>
@@ -64,24 +74,19 @@ const Header = () => {
 								});
 							}}
 							className=" loginButton"
-							variant="danger"
 							style={{ borderRadius: "3px" }}
 						>
-							Logout
+							logout
 						</Button>
 					) : (
 						<Button
 							onClick={() => {
 								setShowLogin(true);
 							}}
-							// className=" loginButton"
-							style={{
-								borderRadius: "3px",
-								background: "#dc3545",
-								borderColor: "#dc3545",
-							}}
+							className=" loginButton"
+							style={{ borderRadius: "3px" }}
 						>
-							<b>Login</b>
+							Login
 						</Button>
 					)}
 					<LoginModal
