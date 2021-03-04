@@ -9,7 +9,6 @@ import {
 	Spinner,
 } from "react-bootstrap";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { ImVolumeMute2, ImVolumeMedium } from "react-icons/im";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Pagination from "react-js-pagination";
@@ -30,7 +29,6 @@ function Home() {
 	const [showPagination, setShowPagination] = useState(false);
 	const [pagination, setPagination] = useState([]);
 	const [alumnis, setAlumnis] = useState([]);
-	const [mute, setMute] = useState(true);
 
 	useEffect(() => {
 		getAlumniStudents();
@@ -42,15 +40,20 @@ function Home() {
 					<Card.Body
 						className="text-center relative"
 						style={{
-							height: "80vh",
+							height: "75vh",
 							position: "relative",
+							// backgroundImage: `url("https://cdn3.f-cdn.com/files/download/97941784/programmin.jpg")`,
+							// backgroundPosition: "center",
+							// backgroundSize: "cover",
+							// boxShadow: `inset 0 0 0 2000px rgba(25, 46, 66, 0.3)`,
 						}}
 					>
 						<video
 							className="shadow-lg"
-							muted={mute}
 							autoPlay
+							muted
 							loop
+							controls
 							style={{
 								position: "absolute",
 								width: "100%",
@@ -70,42 +73,22 @@ function Home() {
 							style={{
 								maxWidth: "450px",
 								minWidth: "300px",
+								// background: "#ffffff",
+								// padding: "15px",
+								// opacity: "0.5",
 							}}
 						>
-							<h1 className="text-danger">Looking for Web Developers?</h1>
+							<h1 className="text-danger">
+								<b>Looking for Web Developers?</b>
+							</h1>
 							<Card.Text
 								className="text-danger mx-auto font-weight-bold mt-4"
 								style={{ maxWidth: "450px", minWidth: "300px" }}
 							>
-								Get to know our Codi Graduates Below!
+								<h3>
+									<b>Get to know our Codi Graduates!</b>
+								</h3>
 							</Card.Text>
-						</div>
-						<div
-							style={{
-								bottom: "3rem",
-								position: "absolute",
-								left: "1.5rem",
-								cursor: "pointer",
-							}}
-							className="h1"
-						>
-							{mute ? (
-								<ImVolumeMedium
-									style={{ opacity: 0.5 }}
-									onClick={() => {
-										setMute(!mute);
-									}}
-									color="#ffbf0e"
-								/>
-							) : (
-								<ImVolumeMute2
-									style={{ opacity: 0.5 }}
-									onClick={() => {
-										setMute(!mute);
-									}}
-									color="007cba"
-								/>
-							)}
 						</div>
 					</Card.Body>
 				</Card>
@@ -121,10 +104,12 @@ function Home() {
 									style={{
 										height: "2.25rem",
 										borderRadius: "0px",
+										// border: "none",
 										outline: "no-outline",
 									}}
 									className="w-100 outlineColor"
 									onChange={(e) => {
+										// console.log(e.target.value);
 										axios
 											.get(
 												`http://localhost:8000/api/alumni?search=${e.target.value}`
@@ -189,7 +174,7 @@ function Home() {
 													className=" rounded-circle mx-auto mt-2"
 													style={{ width: "80px", height: "80px" }}
 													variant={"top"}
-													src={`http://localhost:8000/storage/images/${alumni.image}`}
+													src="https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
 												/>
 											</Link>
 											<Card.Body>

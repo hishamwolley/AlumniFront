@@ -1,6 +1,13 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import { FaGithub, FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
+import {
+	FaGithub,
+	FaFacebook,
+	FaInstagram,
+	FaLinkedin,
+	FaTwitter,
+	FaYoutube,
+} from "react-icons/fa";
 import { default as CodiLogoWhite } from "../White.svg";
 
 const Footer = () => {
@@ -19,51 +26,78 @@ const Footer = () => {
 			>
 				<div className="footerSpacing text-center">
 					<p>
-						<a href="" className="footerLinks">
-							About Codi
+						<a
+							href="https://codi.tech/about/"
+							className="footerLinks"
+							target="_blank"
+						>
+							<b>About Codi</b>
 						</a>
 					</p>
 
 					<p>
-						<a href="" className="footerLinks">
-							Our Team
+						<a
+							href="https://codi.tech/our-team/"
+							className="footerLinks"
+							target="_blank"
+						>
+							<b>Our Team</b>
 						</a>
 					</p>
 
 					<p>
-						<a href="" className="footerLinks">
-							Codi Kids
+						<a
+							href="https://codi.tech/codi-kids/"
+							className="footerLinks"
+							target="_blank"
+						>
+							<b> Codi Kids</b>{" "}
 						</a>
 					</p>
 
 					<p>
-						<a href="" className="footerLinks">
-							Contact Us
-						</a>
-					</p>
-
-					<p>
-						<a href="" className="footerLinks">
-							Legal
+						<a
+							href="https://codi.tech/contact/"
+							className="footerLinks"
+							target="_blank"
+						>
+							<b> Contact Us</b>{" "}
 						</a>
 					</p>
 				</div>
 				<div className="w-25 footerSpacing">
-					<p className=" text-center h5 w-100" style={{ color: "#ff0b79" }}>
-						Follow us on Social Media
+					<p className=" text-center h5 w-100" style={{ color: "#ffffff" }}>
+						<b>Follow us on Social Media</b>
 					</p>
 					<div className="d-flex flex-row justify-content-center mt-4">
-						<div className="p-2 border mx-2">
-							<FaGithub color="white" size="1.5rem" className="mx-1" />
+						<div className="p-2 border mx-2 ">
+							<a href="https://www.facebook.com/coditechlb/" target="_blank">
+								<FaFacebook color="white" size="1.5rem" className="mx-1" />
+							</a>
+						</div>
+						<div className="p-2 border mx-2 ">
+							<a href="https://twitter.com/codi_tech" target="_blank">
+								<FaTwitter color="white" size="1.5rem" className="mx-1" />
+							</a>
 						</div>
 						<div className="p-2 border mx-2">
-							<FaLinkedin color="white" size="1.5rem" className="mx-1" />
+							<a href="https://www.instagram.com/codi_tech/" target="_blank">
+								<FaInstagram
+									color="white"
+									size="1.5rem"
+									border
+									className="mx-1"
+								/>
+							</a>
 						</div>
+
 						<div className="p-2 border mx-2">
-							<FaInstagram color="white" size="1.5rem" className="mx-1" />
-						</div>
-						<div className="p-2 border mx-2">
-							<FaFacebook color="white" size="1.5rem" className="mx-1" />
+							<a
+								href="https://www.linkedin.com/school/codi.tech/"
+								target="_blank"
+							>
+								<FaLinkedin color="white" size="1.5rem" className="mx-1" />
+							</a>
 						</div>
 					</div>
 				</div>
