@@ -46,6 +46,7 @@ const EditSkills = ({ alumni }) => {
 						<form
 							className="form-group d-flex flex-row "
 							onSubmit={(e) => {
+								// console.log
 								const skill = { skill: skillName };
 								axios
 									.post(`/alumni/${id}?_method=PUT`, skill)
@@ -55,10 +56,11 @@ const EditSkills = ({ alumni }) => {
 									})
 									.catch((e) => {
 										const err = e.response.data.message;
-										if (err.includes("Duplicate")) {
+										if (err.includes("No Duplicates skills allowed")) {
 											setDupErr(true);
 										}
 									});
+								e.target.reset();
 								e.preventDefault();
 							}}
 						>

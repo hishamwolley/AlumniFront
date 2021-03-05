@@ -25,7 +25,7 @@ const Profile = () => {
 	};
 	const skillMap = alumniSkills.map((skill) => {
 		return (
-			<Col className="p-0 mt-3 ">
+			<Col className="p-0 ">
 				<p
 					className="small shadow-sm border rounded p-1"
 					style={{ display: "inline-block", minWidth: "4rem" }}
@@ -65,7 +65,7 @@ const Profile = () => {
 					{" "}
 					<Card
 						style={{ width: "40%" }}
-						className=" mt-3 shadow mr-5 p-2 bored-0"
+						className=" mt-3 shadow mr-5 p-2 border-0"
 						id="profile-left"
 					>
 						<Card.Body>
@@ -108,7 +108,7 @@ const Profile = () => {
 									</p>
 								</article>
 								<article className="text-center mt-4 smallText ">
-									<div className="d-flex flex-row align-items-center">
+									<div className="d-flex flex-row align-items-center mb-3">
 										<span
 											style={{ display: "inline" }}
 											className="mr-2 font-weight-bold text-secondary"
@@ -143,7 +143,7 @@ const Profile = () => {
 						</Card.Body>
 					</Card>
 					<Card
-						className=" mt-3 shadow border-0"
+						className=" mt-3 shadow border-0 pb-2"
 						style={{ width: "65%" }}
 						id="profile-right"
 					>
@@ -156,18 +156,37 @@ const Profile = () => {
 							<section className="px-3 ">
 								<section className="w-25 mx-auto">
 									<div className=" d-flex flex-row justify-content-center mt-3">
-										<FaGithub size="2rem" />
-										<FaLinkedin size="2rem" color="#0e76a8" className="ml-3" />
+										<Link to={alumni.github} style={{ textDecoration: "none" }}>
+											<FaGithub size="2rem" color="black" />
+										</Link>
+										<Link to={alumni.linkedin}>
+											<FaLinkedin
+												size="2rem"
+												color="#0e76a8"
+												className="ml-3"
+											/>
+										</Link>
 									</div>
 									<div className="flex-row d-flex justify-content-center align-items-center mt-4 ">
-										<div
-											style={{
-												width: "1rem",
-												height: "1rem",
-												background: "green",
-												borderRadius: "50%",
-											}}
-										></div>
+										{alumni.availability == 1 ? (
+											<div
+												style={{
+													width: "1rem",
+													height: "1rem",
+													background: "green",
+													borderRadius: "50%",
+												}}
+											></div>
+										) : (
+											<div
+												style={{
+													width: "1rem",
+													height: "1rem",
+													background: "red",
+													borderRadius: "50%",
+												}}
+											></div>
+										)}
 										<span className="ml-3">Available</span>
 									</div>
 								</section>
@@ -246,7 +265,7 @@ const Profile = () => {
 											<span style={{ width: "40%" }}>B0{alumni.cohort}</span>
 										</div>
 										<div className="flex-row d-flex justify-content-between mt-4  align-items-center">
-											<p className="m-0">Flexibility</p>
+											<p className="m-0">Flexibile</p>
 											<span style={{ width: "40%" }}>
 												{alumni.flexibility ? "Yes" : "No"}
 											</span>
@@ -259,7 +278,7 @@ const Profile = () => {
 												href={`http://localhost:8000/storage/pdfs/${alumni.pdf}`}
 												style={{ width: "40%" }}
 											>
-												click me
+												Check me out!
 											</a>
 										</div>
 									</Tab>

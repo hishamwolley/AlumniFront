@@ -1,348 +1,487 @@
-import React, { useState } from "react";
-import Connection from "../undraw_online_friends_x73e (1).svg";
-import { Card, Form, Col, Button } from "react-bootstrap";
-import PhoneInput from "react-phone-number-input";
+import React, { useState, useEffect } from "react";
+import { Formik, Field, Form } from "formik";
+import * as Yup from "yup";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import DatePicker from "react-datepicker";
-import { useForm, Controller } from "react-hook-form";
-import * as yup from "yup";
+import { Card } from "react-bootstrap";
+import axios from "axios";
 
 const Register = () => {
-	const [formStep, setFormStep] = useState(0);
-	const [startDate, setStartDate] = useState(new Date());
-	const [phone, setPhone] = useState();
+	const [availability, setAvailability] = useState(1);
+	const [flexibility, setFlexibility] = useState(1);
+	const [phone, setPhone] = useState("");
+	const [phoneError, setPhoneError] = useState(false);
+	const [birthdate, setBirthdate] = useState(new Date());
+	const [birthdateError, setBirthdateError] = useState(false);
+	const [pdf, setPdf] = useState();
 	const [image, setImage] = useState();
+	const [pdfError, setPdfError] = useState(false);
+	const [imageError, setImageError] = useState(false);
+	const [pdfName, setPdfName] = useState("Choose File");
 	const [imageName, setImageName] = useState("Choose File");
+	const [github, setGithub] = useState();
+	const [githubError, setGithubError] = useState(false);
+	const [linkedin, setLinkedin] = useState();
+	const [linkedinError, setLinkedinError] = useState(false);
+	const [cohorts, setCohorts] = useState([]);
+	const [cohort, setCohortValue] = useState();
 
-	const schema = yup.object().shape({
-		image: yup
-			.mixed()
-			.required("Please provide an image")
-			.test("fileSize", "The Image is to large", (value) => {
-				return value && value[0].size <= 10000;
-			}),
-	});
+	const trial = ["Html", "Css", "Javascript"];
 
-	const {
-		watch,
-		register,
-		handleSubmit,
-		formState: { errors, isValid },
-		control,
-	} = useForm({ mode: "all", validationSchema: schema });
+	const githubReg = new RegExp(
+		/^http(s)?:\/\/([w]{3}\.)?github\.com\/([a-zA-Z0-9-]{5,30})/i
+	);
 
-	const completeStep = () => {
-		setFormStep((cur) => cur + 1);
-	};
+	const linkedinReg = new RegExp(
+		/^http(s)?:\/\/([w]{3}\.)?linkedin\.com\/in\/([a-zA-Z0-9-]{5,30})/i
+	);
 
-	const showStepButton = () => {
-		if (formStep > 0) {
-			return (
-				<Button type={"submit"} disabled={!isValid}>
-					Register
-				</Button>
-			);
-		} else {
-			return (
-				<Button onClick={completeStep} disabled={!isValid}>
-					Next
-				</Button>
-			);
-		}
-	};
+	useEffect(() => {
+		axios.get("/cohorts").then((res) => {
+			setCohorts(res.data.data);
+		});
+	}, []);
+
 	return (
-		<section
-			style={{ minHeight: "75vh", padding: "0 5% 0 5%" }}
-			className="d-flex flex-row align-items-center text-center justify-content-between mt-5 "
-		>
-			<section
-				style={{
-					width: "60%",
-				}}
-			>
-				<h1 style={{ color: "#ffbf0e" }}>Welcome to the Team!</h1>
-				<img src={Connection} className="w-100" />
-			</section>
-			<Card
-				style={{ width: "37.5%", borderRadius: "15px" }}
-				className="border-0 shadow"
-			>
-				<Card.Header className="bg-white font-weight-bold h4">
-					Sign Up
-				</Card.Header>
-				<Card.Body>
-					<h5>General</h5>
-					<Form
-						onSubmit={handleSubmit(() => {
-							console.log("submit");
-						})}
-					>
-						{formStep >= 0 && (
-							<section className={formStep == 1 && "d-none"}>
-								<Form.Row className="mt-3">
-									<Col>
-										<Form.Control
-											ref={register({
-												required: {
-													value: true,
-													message: "Enter Firstname",
-												},
-											})}
-											placeholder="First name"
-											type="text"
-											name="firstname"
-										/>
-										{errors.firstname && (
-											<p className="text-danger small text-center">
-												{errors.firstname.message}
-											</p>
-										)}
-									</Col>
-									<Col>
-										<Form.Control
-											ref={register({
-												required: {
-													value: true,
-													message: "Enter Lastname",
-												},
-											})}
-											placeholder="Last name"
-											type="text"
-											name="lastname"
-										/>
+		<Card className="text-center w-50 mx-auto shadow border-0 ">
+			<Card.Body>
+				<Formik
+					initialValues={{
+						email: "",
+						password: "",
+						firstname: "",
+						lastname: "",
+						description: "",
+					}}
+					onSubmit={async (values, { setSubmitting }) => {
+						const {
+							email,
+							firstname,
+							lastname,
+							description,
+							password,
+						} = values;
+						setSubmitting(false);
+						if (!isValidPhoneNumber(phone)) {
+							setPhoneError(true);
+							return;
+						}
+						if (github) {
+							console.log(githubReg.test(github));
+							if (githubReg.test(github)) {
+								setGithubError(true);
+							}
+						}
+						if (linkedin) {
+							console.log(linkedinReg.test(linkedin));
+							if (linkedinReg.test(linkedin)) {
+								setLinkedinError(true);
+							}
+						}
+						const formData = new FormData();
+						formData.append("pdf", pdf);
+						formData.append("image", image);
+						formData.append("cohort", cohort);
+						formData.append("firstname", firstname);
+						formData.append("lastname", lastname);
+						formData.append("password", password);
+						formData.append("description", description);
+						formData.append("availability", availability);
+						formData.append("flexibility", flexibility);
+						formData.append("email", email);
+						formData.append("phone", phone);
+						formData.append("github", github);
+						formData.append("linkedin", linkedin);
+						formData.append("birthdate", birthdate.toISOString().slice(0, 10));
+						formData.append("status", 0);
 
-										{errors.lastname && (
-											<p className="text-danger small text-center">
-												{errors.lastname.message}
-											</p>
-										)}
-									</Col>
-								</Form.Row>
-								<Form.Group controlId="formBasicEmail">
-									<div className="d-flex flex-row align-items-center mt-4">
-										<Form.Label style={{ width: "35%" }} className="mr-4">
-											Email address
-										</Form.Label>
-										<Form.Control
-											ref={register({
-												required: "required",
-												pattern: {
-													value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-													message: "Invalid email address",
-												},
-											})}
-											type="email"
-											placeholder="Enter email"
-											name="email"
-										/>
-									</div>
+						trial.forEach((skill) => {
+							formData.append("skills[]", skill);
+						});
+						console.log(formData.getAll("skills"));
 
-									{errors.email && (
-										<p className="text-danger small text-center">
-											{errors.email.message}
-										</p>
-									)}
-								</Form.Group>
-								<Form.Group controlId="formBasicPassword">
-									<div className="d-flex flex-row align-items-center mt-4">
-										<Form.Label style={{ width: "35%" }} className=" mr-4">
-											Password
-										</Form.Label>
-										<Form.Control
-											ref={register({
-												required: "Password is required",
-												maxLength: 20,
-												minLength: 6,
-											})}
-											type="password"
-											placeholder="Password"
-											name="password"
-										/>
-									</div>
-									{errors.password && (
-										<p className="text-danger small text-center">
-											{errors.password.message}
-										</p>
-									)}
-								</Form.Group>
-
-								<Form.Group controlId="formPlaintextEmail">
-									<div className="d-flex flex-row align-items-center mt-4">
-										<Form.Label style={{ width: "35%" }} className="mr-4">
-											City
-										</Form.Label>
-										<Form.Control
-											ref={register({
-												required: {
-													value: true,
-													message: "Enter City",
-												},
-											})}
-											type="text"
-											placeholder="Enter current City"
-											name="city"
-										/>
-									</div>
-									{errors.city && (
-										<p className="text-danger small">{errors.city.message}</p>
-									)}
-								</Form.Group>
-								<div>
-									<div className="d-flex flex-row text-center mt-4 align-items-center">
-										<p style={{ width: "35%" }} className=" mx-auto m-0">
-											Phone
-										</p>
-										<Controller
-											as={
-												<PhoneInput
-													international
-													defaultCountry="LB"
-													className="w-100"
-													placeholder="Enter phone number"
-													// value={phone}
-													// onChange={setPhone}
-												/>
-											}
-											name="phone"
-											control={control}
-											rules={{ required: "Phone is required" }}
-										/>
-									</div>
-									{errors.phone && (
-										<p className="text-danger small">{errors.phone.message}</p>
-									)}
-								</div>
-								<section>
-									<div className="d-flex flex-row text-center mt-4 align-items-center text-center">
-										<p
-											style={{ width: "30%", display: "inline-block" }}
-											className=" m-0 pr-2 "
-										>
-											D.O.B
-										</p>
-
-										<Controller
-											control={control}
-											name="birthdate"
-											rules={{ required: "Birthdate is required" }}
-											render={({ onChange, onBlur, value }) => (
-												<DatePicker
-													placeholderText="Select your birthday"
-													className="form-control"
-													dateFormat="yyyy/MM/dd"
-													onChange={onChange}
-													onBlur={onBlur}
-													selected={value}
-												/>
-											)}
-										/>
-									</div>
-									{errors.birthdate && (
-										<p className="text-danger small">
-											{errors.birthdate.message}
-										</p>
-									)}
-								</section>
-							</section>
-						)}
-						{formStep >= 1 && (
-							<section className={formStep == 0 && "d-none"}>
-								<Form.File
-									className="text-left"
-									id="custom-file-translate-scss"
-									type="file"
-									ref={register}
-									label={imageName}
-									lang="en"
-									custom
-									name="image"
-									onChange={(e) => {
-										console.log(e.target.files[0]);
-										// setImageName(e.target.files[0].name);
-										// setImage(e.target.files[0]);
-									}}
-								/>
-								{errors.image && (
-									<p className="text-danger small">{errors.image.message}</p>
-								)}
-								<Form.File
-									className="text-left"
-									id="custom-file-translate-scss"
-									label={imageName}
-									lang="en"
-									custom
-									onChange={(e) => {
-										setImageName(e.target.files[0].name);
-										setImage(e.target.files[0]);
-									}}
-								/>
-								<section className="d-flex flex-row align-items-center justify-content-around mt-4 ">
-									<Form.Control
-										placeholder="GitHub Profile Url"
-										type="text"
-										name="github"
-										style={{ width: "40%" }}
-									/>
-									<Form.Control
-										style={{ width: "40%" }}
-										placeholder="Linkedin Profile Url"
-										type="text"
-										name="linkedin"
-									/>
-								</section>
-								<div className="d-flex flex-row mt-4 text-center w-75 mx-auto">
-									<div className="form-group mx-4 w-50">
-										<label htmlFor="course">Availability</label>
-										<select
-											name="section"
-											// value={availability}
-											className={"form-control"}
-											// onChange={(e) => {
-											// 	const result = parseInt(e.target.value);
-											// 	setAvailability(result);
-											// }}
-										>
-											<option value={1}>Yes</option>
-											<option value={0}>No</option>
-										</select>
-									</div>
-
-									<div className="form-group mx-4 w-50">
-										<label htmlFor="course">Flexibility</label>
-										<select
-											name="section"
-											// value={flexibility}
-											className={"form-control"}
-											// onChange={(e) => {
-											// 	const result = parseInt(e.target.value);
-											// 	setFlexibility(result);
-											// }}
-										>
-											<option value={1}>Yes</option>
-											<option value={0}>No</option>
-										</select>
-									</div>
-								</div>
-								<Form.Group
-									className="d-flex flex-row align-items-center mt-4"
-									controlId="exampleForm.ControlTextarea1"
+						axios
+							.post("/alumni/register", formData, {
+								headers: {
+									"Content-Type": "multipart/form-data",
+								},
+							})
+							.then((res) => console.log(res));
+					}}
+					validationSchema={Yup.object({
+						email: Yup.string()
+							.email("Invalid Email Address")
+							.required("Email is required"),
+						firstname: Yup.string().required("Firstname is required"),
+						lastname: Yup.string().required("Lastname is required"),
+						password: Yup.string().required("password is required"),
+						description: Yup.string()
+							.max(215, "Must be 215 characters or less")
+							.required("Description is required")
+							.min(50, "Must be 50 characters or more"),
+					})}
+				>
+					{(formik, isSubmitting) => (
+						<Form className="mt-5">
+							<section className="d-flex flex-row align-items-center justify-content-around">
+								<div
+									className="form-group  text-center"
+									style={{ width: "40%" }}
 								>
-									<Form.Label style={{ width: "35%" }} className="mr-4">
-										Description
-									</Form.Label>
-									<Form.Control
-										as="textarea"
-										rows={3}
-										placeholder="About yourself"
-									/>
-								</Form.Group>
+									<label htmlFor="firstname" className="w-25">
+										Firstname
+									</label>
+									<div className="w-100">
+										<Field
+											name="firstname"
+											className={
+												formik.touched.firstname && formik.errors.firstname
+													? "form-control is-invalid "
+													: "form-control "
+											}
+											type="text"
+										/>
+										{formik.touched.firstname && formik.errors.firstname ? (
+											<div className="invalid-feedback">
+												{formik.errors.firstname}
+											</div>
+										) : null}
+									</div>
+								</div>
+								<div
+									style={{ width: "40%" }}
+									className="form-group  text-center "
+								>
+									<label htmlFor="lastname" className="w-25">
+										Lastname
+									</label>
+									<div className="w-100">
+										<Field
+											name="lastname"
+											className={
+												formik.touched.lastname && formik.errors.lastname
+													? "form-control is-invalid "
+													: "form-control "
+											}
+											type="text"
+										/>
+										{formik.touched.lastname && formik.errors.lastname ? (
+											<div className="invalid-feedback">
+												{formik.errors.lastname}
+											</div>
+										) : null}
+									</div>
+								</div>
 							</section>
-						)}
-					</Form>
-				</Card.Body>
-				{showStepButton()}
-				<pre>{JSON.stringify(watch(), null, 2)}</pre>
-			</Card>
-		</section>
+
+							<div className="form-group d-flex flex-row align-items-center text-center mt-4 justify-content-around">
+								<div style={{ width: "40%" }}>
+									<label htmlFor="username" className="w-25">
+										Email
+									</label>
+									<div className="w-100">
+										<Field
+											name="email"
+											className={
+												formik.touched.email && formik.errors.email
+													? "form-control is-invalid "
+													: "form-control "
+											}
+											type="email"
+										/>
+										{formik.touched.email && formik.errors.email ? (
+											<div className="invalid-feedback">
+												{formik.errors.email}
+											</div>
+										) : null}
+									</div>
+								</div>
+
+								<div className="text-center " style={{ width: "40%" }}>
+									<label className="w-25">Phone</label>
+									<div className="w-100">
+										<PhoneInput
+											international
+											defaultCountry="LB"
+											className="w-100"
+											placeholder="Enter phone number"
+											value={phone}
+											onChange={setPhone}
+										/>
+										{phoneError && (
+											<p className="text-danger small mt-2">
+												Please Enter a valid Phone number
+											</p>
+										)}
+									</div>
+								</div>
+							</div>
+
+							<div
+								className="form-group mx-auto  text-center"
+								style={{ width: "40%" }}
+							>
+								<label htmlFor="password" className="w-25">
+									password
+								</label>
+								<div className="w-100">
+									<Field
+										name="password"
+										className={
+											formik.touched.password && formik.errors.password
+												? "form-control is-invalid "
+												: "form-control "
+										}
+										type="password"
+									/>
+									{formik.touched.password && formik.errors.password ? (
+										<div className="invalid-feedback">
+											{formik.errors.password}
+										</div>
+									) : null}
+								</div>
+							</div>
+
+							<div className="d-flex flex-row align-items-center mt-5">
+								<div
+									style={{
+										width: "37.5%",
+										borderBottom: "1px solid rgba(0,0,0,0.3)",
+										display: "inline-block",
+									}}
+								></div>
+								<span className="mx-2 small text-secondary text-center">
+									General Information
+								</span>
+
+								<div
+									style={{
+										width: "37.5%",
+										borderBottom: "1px solid rgba(0,0,0,0.3)",
+										display: "inline-block",
+									}}
+								></div>
+							</div>
+							<div className="form-group text-center mt-5">
+								<label htmlFor="description" className="w-25 text-center">
+									Description
+								</label>
+								<div className="w-50 mx-auto">
+									<Field
+										maxLength={115}
+										rows={4}
+										name="description"
+										className={
+											formik.touched.description && formik.errors.description
+												? "form-control is-invalid "
+												: "form-control"
+										}
+										as="textarea"
+									/>
+									{formik.touched.description && formik.errors.description ? (
+										<div className="invalid-feedback">
+											{formik.errors.description}
+										</div>
+									) : null}
+								</div>
+							</div>
+							<div className=" mt-5 d-flex flex-row align-items-center justify-content-around">
+								<div style={{ width: "40%" }}>
+									<p className=" text-center m-0">Porfile Image</p>
+									<div className="mt-2">
+										<div className="custom-file text-left">
+											<input
+												type="file"
+												className="custom-file-input"
+												id="customFile"
+												onChange={(e) => {
+													setImage(e.target.files[0]);
+													setImageName(e.target.files[0].name);
+												}}
+											/>
+											<label className="custom-file-label" htmlFor="customFile">
+												{imageName}
+											</label>
+										</div>
+										{pdfError && (
+											<p className="text-danger small mt-2">
+												The Cv must be a file of type: Pdf
+											</p>
+										)}
+									</div>
+								</div>
+								<div style={{ width: "40%" }}>
+									<p className="text-center m-0">Cv</p>
+									<div className="mt-2">
+										<div className="custom-file text-left">
+											<input
+												type="file"
+												className="custom-file-input"
+												id="customFile"
+												onChange={(e) => {
+													setPdf(e.target.files[0]);
+													setPdfName(e.target.files[0].name);
+												}}
+											/>
+											<label className="custom-file-label" htmlFor="customFile">
+												{pdfName}
+											</label>
+										</div>
+										{pdfError && (
+											<p className="text-danger small mt-2">
+												The Cv must be a file of type: Pdf
+											</p>
+										)}
+									</div>
+								</div>
+							</div>
+
+							<div className="d-flex flex-row mt-5 text-center w-75 mx-auto">
+								<div className="form-group mx-4 w-50">
+									<label htmlFor="course">Availability</label>
+									<select
+										name="section"
+										value={availability}
+										className={"form-control"}
+										onChange={(e) => {
+											if (e.target.value == 1) {
+												setAvailability(1);
+											} else {
+												setAvailability(0);
+											}
+										}}
+									>
+										<option value={1}>Yes</option>
+										<option value={0}>No</option>
+									</select>
+								</div>
+
+								<div className="form-group mx-4 w-50">
+									<label htmlFor="course">Flexibility</label>
+									<select
+										name="section"
+										className={"form-control"}
+										onChange={(e) => {
+											if (e.target.value == 1) {
+												setFlexibility(1);
+											} else {
+												setFlexibility(0);
+											}
+										}}
+									>
+										<option value={1}>Yes</option>
+										<option value={0}>No</option>
+									</select>
+								</div>
+							</div>
+							<section className="d-flex flex-row align-items-center justify-content-around">
+								<div className=" mt-4">
+									<p className="m-0 ">Birthdate:</p>
+									<div>
+										<DatePicker
+											// style={{ width: "85%" }}
+											minDate={new Date(1900, 1, 1)}
+											maxDate={new Date()}
+											className=" form-control"
+											dateFormat="yyyy/MM/dd"
+											selected={birthdate}
+											onChange={(date) => {
+												setBirthdate(date);
+											}}
+										/>
+
+										{birthdateError && (
+											<p className="text-danger small mt-2">
+												Please set a valid Date
+											</p>
+										)}
+									</div>
+									<div className="mt-4">
+										<label htmlFor="course">Cohorts</label>
+										<select
+											name="cohorts"
+											className={"form-control"}
+											onChange={(e) => {
+												setCohortValue(e.target.value);
+											}}
+										>
+											{cohorts.map((cohort) => {
+												return (
+													<option key={cohort.id} value={cohort.cohort}>
+														{cohort.cohort}
+													</option>
+												);
+											})}
+										</select>
+									</div>
+								</div>
+							</section>
+
+							<section className="d-flex flex-row align-items-center justify-content-around mt-5">
+								<div
+									className="form-group  text-center"
+									style={{ width: "40%" }}
+								>
+									<label htmlFor="github" className="w-25">
+										github
+									</label>
+									<div className="w-100">
+										<input
+											name="github"
+											className="form-control"
+											type="text"
+											// value={github}
+											onChange={(e) => {
+												setGithub(e.target.value);
+											}}
+										/>
+										{githubError && (
+											<p className="text-danger small text-center">
+												Please insert correct URL
+											</p>
+										)}
+									</div>
+								</div>
+								<div
+									style={{ width: "40%" }}
+									className="form-group  text-center "
+								>
+									<label htmlFor="linkedin" className="w-25">
+										linkedin
+									</label>
+									<div className="w-100">
+										<input
+											name="linkedin"
+											// value={linkedin}
+											className="form-control"
+											onChange={(e) => {
+												setLinkedin(e.target.value);
+											}}
+											type="text"
+										/>
+										{linkedinError && (
+											<p className="text-danger small text-center">
+												Please insert correct URL
+											</p>
+										)}
+									</div>
+								</div>
+							</section>
+							<div className="form-group">
+								<button
+									style={{ background: "#ffbf0e", border: "none" }}
+									type="submit"
+									className="btn btn-primary shadow-sm mt-5 ml-4 onSave"
+									disabled={isSubmitting}
+								>
+									{isSubmitting ? "Please wait..." : "Save"}
+								</button>
+							</div>
+						</Form>
+					)}
+				</Formik>
+			</Card.Body>
+		</Card>
 	);
 };
 

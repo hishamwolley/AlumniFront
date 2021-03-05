@@ -75,6 +75,10 @@ textarea {
 	background-color: #4ded30 !important;
 }
 
+.react-datepicker-popper {
+	z-index: 9999 !important;
+}
+
 @media screen and (max-width: 900px) {
 	#profile {
 		flex-direction: column !important;

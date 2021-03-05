@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import { date } from "yup/lib/locale";
 
 const EditAbout = ({ alumni }) => {
 	const { id } = useParams();
@@ -16,8 +18,12 @@ const EditAbout = ({ alumni }) => {
 		availability: alumni.data.availability,
 		flexibility: alumni.data.flexibility,
 		phone: alumni.data.phone,
+		birthdate: alumni.data.birthdate,
+		city: alumni.data.city,
 	};
-
+	const birthdateRegex = new RegExp(
+		/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
+	);
 	const updateAlumni = async (
 		firstname,
 		lastname,
@@ -25,18 +31,30 @@ const EditAbout = ({ alumni }) => {
 		availability,
 		flexibility,
 		description,
-		phone
+		phone,
+		birthdate,
+		pdf
 	) => {
+		if (!birthdateRegex.test(birthdate.toISOString().slice(0, 10))) {
+			setBirthdateError(true);
+			return;
+		}
+		if (!isValidPhoneNumber(phone)) {
+			setPhoneError(true);
+			return;
+		}
+
 		const body = {
 			firstname,
 			lastname,
-			// email,
 			availability,
 			flexibility,
 			description,
 			phone,
+			birthdate: birthdate.toISOString().slice(0, 10),
 		};
 		await axios.post(`/alumni/${id}?_method=PUT`, body).then((res) => {
+			console.log(res);
 			setSuccess(true);
 			setTimeout(() => {
 				setSuccess(false);
@@ -47,6 +65,12 @@ const EditAbout = ({ alumni }) => {
 	const [availability, setAvailability] = useState(alumniDetails.availability);
 	const [flexibility, setFlexibility] = useState(alumniDetails.flexibility);
 	const [phone, setPhone] = useState(alumniDetails.phone);
+	const [phoneError, setPhoneError] = useState(false);
+	const [birthdate, setBirthdate] = useState(new Date(alumniDetails.birthdate));
+	const [birthdateError, setBirthdateError] = useState(false);
+	const [pdf, setPdf] = useState();
+	const [pdfError, setPdfError] = useState(false);
+	const [pdfName, setPdfName] = useState("Choose File");
 	const [success, setSuccess] = useState(false);
 
 	return (
@@ -79,9 +103,32 @@ const EditAbout = ({ alumni }) => {
 					lastname: alumniDetails.lastname,
 					description: alumniDetails.description,
 				}}
-				onSubmit={(values, { setSubmitting }) => {
+				onSubmit={async (values, { setSubmitting }) => {
 					const { email, firstname, lastname, description } = values;
 					setSubmitting(false);
+					if (pdf) {
+						const formData = new FormData();
+						formData.append("pdf", pdf);
+						await axios
+							.post(`/alumni/${id}?_method=PUT`, formData, {
+								headers: {
+									"Content-Type": "multipart/form-data",
+								},
+							})
+							.then((res) => {
+								console.log(res);
+							})
+							.catch((e) => {
+								if (
+									e.response.data.errors.pdf[0] ==
+									"The pdf must be a file of type: application/pdf."
+								) {
+									setPdfError(true);
+								}
+								console.log(e.response.data.errors.pdf[0]);
+							});
+					}
+
 					updateAlumni(
 						firstname,
 						lastname,
@@ -89,7 +136,9 @@ const EditAbout = ({ alumni }) => {
 						availability,
 						flexibility,
 						description,
-						phone
+						phone,
+						birthdate,
+						pdf
 					);
 				}}
 				validationSchema={Yup.object({
@@ -98,11 +147,8 @@ const EditAbout = ({ alumni }) => {
 						.required("Email is required"),
 					firstname: Yup.string().required("Firstname is required"),
 					lastname: Yup.string().required("Lastname is required"),
-					// location: Yup.string()
-					// 	.max(15, "Must be 15 charaacters or less")
-					// 	.required("Location is required"),
 					description: Yup.string()
-						.max(115, "Must be 115 characters or less")
+						.max(215, "Must be 215 characters or less")
 						.required("Description is required")
 						.min(50, "Must be 50 characters or more"),
 				})}
@@ -174,14 +220,21 @@ const EditAbout = ({ alumni }) => {
 						</div>
 						<div className="d-flex flex-row text-center mt-5 align-items-center">
 							<p className="w-25 mx-auto m-0">Phone</p>
-							<PhoneInput
-								international
-								defaultCountry="LB"
-								className="w-100"
-								placeholder="Enter phone number"
-								value={phone}
-								onChange={setPhone}
-							/>
+							<div className="w-100">
+								<PhoneInput
+									international
+									defaultCountry="LB"
+									className="w-100"
+									placeholder="Enter phone number"
+									value={phone}
+									onChange={setPhone}
+								/>
+								{phoneError && (
+									<p className="text-danger small mt-2">
+										Please Enter a valid Phone number
+									</p>
+								)}
+							</div>
 						</div>
 						<div className="d-flex flex-row align-items-center mt-5">
 							<div
@@ -226,6 +279,30 @@ const EditAbout = ({ alumni }) => {
 								) : null}
 							</div>
 						</div>
+						<div className="d-flex flex-row align-items-center mt-4">
+							<p className="w-25 text-center m-0">Cv</p>
+							<div>
+								<div className="custom-file w-100">
+									<input
+										type="file"
+										className="custom-file-input"
+										id="customFile"
+										onChange={(e) => {
+											setPdf(e.target.files[0]);
+											setPdfName(e.target.files[0].name);
+										}}
+									/>
+									<label className="custom-file-label" htmlFor="customFile">
+										{pdfName}
+									</label>
+								</div>
+								{pdfError && (
+									<p className="text-danger small mt-2">
+										The Cv must be a file of type: Pdf
+									</p>
+								)}
+							</div>
+						</div>
 
 						<div className="d-flex flex-row mt-5 text-center w-75 mx-auto">
 							<div className="form-group mx-4 w-50">
@@ -260,6 +337,27 @@ const EditAbout = ({ alumni }) => {
 								</select>
 							</div>
 						</div>
+						<div className="d-flex flex-row justify-content-around align-items-center mt-4">
+							<p className="m-0 ">Birthdate:</p>
+							<div className="w-75">
+								<DatePicker
+									// style={{ width: "85%" }}
+									className=" form-control"
+									dateFormat="yyyy/MM/dd"
+									selected={birthdate}
+									onChange={(date) => {
+										setBirthdate(date);
+									}}
+								/>
+
+								{birthdateError && (
+									<p className="text-danger small mt-2">
+										Please set a valid Date
+									</p>
+								)}
+							</div>
+						</div>
+
 						<div className="form-group">
 							<button
 								style={{ background: "#ffbf0e", border: "none" }}

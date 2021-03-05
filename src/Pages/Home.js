@@ -17,7 +17,8 @@ import Video from "../video/Video Introduction to life at Codi (full version).mp
 
 function Home() {
 	const getAlumniStudents = async () => {
-		await axios.get(`alumni?page=${pageNumber}`).then((res) => {
+		await axios.get(`approved?page=${pageNumber}`).then((res) => {
+			console.log(res.data);
 			setLoading(false);
 			setPagination(res.data.meta);
 			setAlumnis(res.data.data);
@@ -34,7 +35,7 @@ function Home() {
 
 	useEffect(() => {
 		getAlumniStudents();
-	}, []);
+	}, [pageNumber]);
 	return (
 		<>
 			<main>
@@ -174,7 +175,6 @@ function Home() {
 					) : (
 						<Row lg={3} md={2} sm={1} xs={1}>
 							{alumnis.map((alumni, index) => {
-								console.log(alumni);
 								return (
 									<Col key={index} style={{ padding: "0px", margin: "0px" }}>
 										<Card
@@ -201,17 +201,37 @@ function Home() {
 														{alumni.firstname} {alumni.lastname}
 													</Card.Title>
 												</Link>
-												<Card.Text>Availability</Card.Text>
-												<Card.Link
-													href="https://www.github.com"
-													target="_blank"
-												>
+												<div className=" mb-3 d-flex flex-row justify-content-center align-items-center">
+													<p className="m-0">Availabile</p>
+													{alumni.availability == 1 ? (
+														<div
+															// className="bg-red "
+															style={{
+																marginLeft: "0.25rem",
+																borderRadius: "50%",
+																background: "green",
+																width: "1rem",
+																height: "1rem",
+																display: "block",
+															}}
+														></div>
+													) : (
+														<div
+															style={{
+																marginLeft: "0.25rem",
+																borderRadius: "50%",
+																background: "red",
+																width: "1rem",
+																height: "1rem",
+																display: "block",
+															}}
+														></div>
+													)}
+												</div>
+												<Card.Link href={alumni.github} target="_blank">
 													<FaGithub size="2rem" color="#000" />
 												</Card.Link>
-												<Card.Link
-													href="https://www.linkedin.com"
-													target="_blank"
-												>
+												<Card.Link href={alumni.linkedin} target="_blank">
 													<FaLinkedin size="2rem" color="#0e76a8 " />
 												</Card.Link>
 											</Card.Body>

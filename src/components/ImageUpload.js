@@ -31,8 +31,6 @@ const ImageUpload = ({ alumni }) => {
 
 					const formData = new FormData();
 					formData.append("image", image);
-					console.log(formData.get("image"));
-					console.log(formData.getAll("image"));
 					await axios
 						.post(`/alumni/${id}?_method=PUT`, formData, {
 							headers: {
@@ -40,10 +38,10 @@ const ImageUpload = ({ alumni }) => {
 							},
 						})
 						.then((res) => {
+							console.log(res);
 							setNewAlumniImg(res);
 						})
 						.catch((e) => {
-							// console.log(e.response.data.errors.image[0]);
 							setImageError(e.response.data.errors.image[0]);
 						});
 				}}

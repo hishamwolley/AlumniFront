@@ -28,7 +28,9 @@ const Header = () => {
 					padding: "0 10% 0 10%",
 				}}
 			>
-				<img src={CodiLogo} style={{ width: "9rem" }} />
+				<Link to="/">
+					<img src={CodiLogo} style={{ width: "9rem" }} />
+				</Link>
 				<div>
 					<Link
 						to="/"

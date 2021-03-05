@@ -1,6 +1,7 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { FaGithub, FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { default as CodiLogoWhite } from "../White.svg";
 
 const Footer = () => {
@@ -68,11 +69,12 @@ const Footer = () => {
 					</div>
 				</div>
 
-				<img
-					src={CodiLogoWhite}
-					style={{ width: "10rem", marginTop: "3rem ", marginBottom: "2rem" }}
-					// className="footerSpacing"
-				/>
+				<Link to="/">
+					<img
+						src={CodiLogoWhite}
+						style={{ width: "10rem", marginTop: "3rem ", marginBottom: "2rem" }}
+					/>
+				</Link>
 			</Card>
 		</footer>
 	);
